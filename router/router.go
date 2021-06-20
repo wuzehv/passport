@@ -7,9 +7,15 @@ import (
 	"github.com/wuzehv/passport/app/sso"
 	"github.com/wuzehv/passport/app/svc"
 	"github.com/wuzehv/passport/middleware"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	_ "github.com/wuzehv/passport/docs"
 )
 
 func construct(router *gin.Engine) {
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	constructSso(router)
 	constructAdmin(router)
 	constructSvc(router)

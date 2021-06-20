@@ -61,7 +61,7 @@ sso.com:8099
 - [ ] 后台功能列表
 - [ ] 业务日志处理
 - [X] sso中心后台
-- [ ] swagger
+- [X] swagger(http://sso.com:8099/swagger/index.html#/)
 
 ## 对接流程
 ### svc接口
