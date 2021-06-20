@@ -31,8 +31,12 @@ type Base interface {
 }
 
 type Param struct {
-	Where string
-	Bind  []interface{}
+	Page     int
+	PageSize int
+	Table    interface{}
+	Where    string // 仅支持命名参数, e.g. name = @name
+	Bind     map[string]interface{}
+	Order    string
 }
 
 type PaginateResponse struct {
@@ -42,38 +46,41 @@ type PaginateResponse struct {
 	Items    []map[string]interface{} `json:"items"`
 }
 
-func Paginate(page, pageSize int, table interface{}, params Param) (*PaginateResponse, error) {
-	if page <= 0 {
-		page = 1
+func Paginate(params *Param) (*PaginateResponse, error) {
+	if params.Page <= 0 {
+		params.Page = 1
 	}
 
 	switch {
-	case pageSize > MaxPageSize:
-		pageSize = MaxPageSize
-	case pageSize <= 0:
-		pageSize = DefaultPageSize
+	case params.PageSize > MaxPageSize:
+		params.PageSize = MaxPageSize
+	case params.PageSize <= 0:
+		params.PageSize = DefaultPageSize
 	}
 
 	res := PaginateResponse{
-		Page:     page,
-		PageSize: pageSize,
+		Page:     params.Page,
+		PageSize: params.PageSize,
 		Items:    []map[string]interface{}{},
 	}
 
+	dc := db.Db.Model(params.Table)
+	dl := db.Db.Model(params.Table).Scopes(PaginateScopes(params.Page, params.PageSize))
+
 	if params.Where != "" {
-		if err := db.Db.Model(table).Where(params.Where, params.Bind...).Count(&res.Total).Error; err != nil {
+		if err := dc.Where(params.Where, params.Bind).Count(&res.Total).Error; err != nil {
 			return nil, err
 		}
 
-		if err := db.Db.Model(table).Scopes(PaginateScopes(page, pageSize)).Where(params.Where, params.Bind...).Find(&res.Items).Error; err != nil {
+		if err := dl.Where(params.Where, params.Bind).Find(&res.Items).Error; err != nil {
 			return nil, err
 		}
 	} else {
-		if err := db.Db.Model(table).Count(&res.Total).Error; err != nil {
+		if err := dc.Count(&res.Total).Error; err != nil {
 			return nil, err
 		}
 
-		if err := db.Db.Model(table).Scopes(PaginateScopes(page, pageSize)).Find(&res.Items).Error; err != nil {
+		if err := dl.Find(&res.Items).Error; err != nil {
 			return nil, err
 		}
 	}
@@ -81,10 +88,12 @@ func Paginate(page, pageSize int, table interface{}, params Param) (*PaginateRes
 	return &res, nil
 }
 
-func Paginate2(c *gin.Context, table interface{}, params Param) (*PaginateResponse, error) {
+func Paginate2(c *gin.Context, params *Param) (*PaginateResponse, error) {
 	page, _ := strconv.Atoi(c.PostForm("page"))
 	pageSize, _ := strconv.Atoi(c.PostForm("page_size"))
-	return Paginate(page, pageSize, table, params)
+	params.Page = page
+	params.PageSize = pageSize
+	return Paginate(params)
 }
 
 func PaginateScopes(page, pageSize int) func(db *gorm.DB) *gorm.DB {

@@ -10,7 +10,7 @@ import (
 
 func Index(c *gin.Context) {
 	var t action.Action
-	res, err := base.Paginate2(c, &t, base.Param{})
+	res, err := base.Paginate2(c, &base.Param{Table: &t})
 	if err != nil {
 		c.JSON(http.StatusOK, util.SystemError.Msg(nil))
 		return
