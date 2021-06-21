@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-// @description action list
+// @description 接口列表
 // @tags 后台系统
 // @accept application/x-www-form-urlencoded
 // @produce application/json
@@ -26,4 +26,17 @@ func Index(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, util.Success.Msg(res))
+}
+
+// @description 添加接口
+// @tags 后台系统
+// @Accept application/x-www-form-urlencoded
+// @produce application/json
+// @param url query string true "路由"
+// @param remark query string true "备注"
+// @success 200 {object} util.Response
+// @failure 200 {object} util.Response
+// @router /admin/action/add [POST]
+func Add(c *gin.Context) {
+
 }

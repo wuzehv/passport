@@ -9,10 +9,8 @@ import (
 // @title 单点登录系统
 // @version 1.0
 // @description 单点登录系统api文档
-
 // @contact.name wuzehui
 // @contact.email
-
 // @host http://sso.com:8099
 // @BasePath /
 func main() {

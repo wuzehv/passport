@@ -26,9 +26,47 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/admin/action/add": {
+            "post": {
+                "description": "添加接口",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "后台系统"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "路由",
+                        "name": "url",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "备注",
+                        "name": "remark",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/action/index": {
             "get": {
-                "description": "action list",
+                "description": "接口列表",
                 "consumes": [
                     "application/x-www-form-urlencoded"
                 ],

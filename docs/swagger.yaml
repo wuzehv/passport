@@ -17,11 +17,36 @@ info:
   title: 单点登录系统
   version: "1.0"
 paths:
+  /admin/action/add:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 添加接口
+      parameters:
+      - description: 路由
+        in: query
+        name: url
+        required: true
+        type: string
+      - description: 备注
+        in: query
+        name: remark
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Response'
+      tags:
+      - 后台系统
   /admin/action/index:
     get:
       consumes:
       - application/x-www-form-urlencoded
-      description: action list
+      description: 接口列表
       parameters:
       - description: 页码
         in: query
