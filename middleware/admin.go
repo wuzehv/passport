@@ -12,8 +12,8 @@ import (
 	"time"
 )
 
-// Admin admin页面
-func Admin() gin.HandlerFunc {
+// Api admin接口
+func Api() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token, err := c.Cookie(util.CookieFlag)
 		if err != nil {

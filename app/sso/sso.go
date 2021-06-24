@@ -114,7 +114,7 @@ func commonDeal(c *gin.Context, cl *model.Client, userId uint, jump string) {
 		})
 	} else {
 		// 如果不是sso，跳转到首页
-		c.Redirect(http.StatusMovedPermanently, "/admin/index/index")
+		c.Redirect(http.StatusMovedPermanently, "/api/v1/index")
 	}
 }
 

@@ -81,8 +81,8 @@ func main() {
 
 	log.Println("initialize client done")
 
-	u = "admin@gmail.com"
-	up := "admin"
+	u = "api@gmail.com"
+	up := "api"
 	p := util.GenPassword(up)
 	db.Create(&model.User{Email: u, Password: p, Status: model.StatusNormal})
 	log.Printf("initialize user: %s, password: %s\n", u, up)

@@ -11,45 +11,7 @@
     "host": "sso.com:8099",
     "basePath": "/",
     "paths": {
-        "/admin/action/add": {
-            "post": {
-                "description": "添加接口",
-                "consumes": [
-                    "application/x-www-form-urlencoded"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "后台系统"
-                ],
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "路由",
-                        "name": "url",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "备注",
-                        "name": "remark",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/util.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/action/index": {
+        "/api/v1/actions": {
             "get": {
                 "description": "接口列表",
                 "consumes": [
@@ -73,6 +35,91 @@
                         "description": "每页数量",
                         "name": "page_size",
                         "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "添加接口",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "后台系统"
+                ],
+                "parameters": [
+                    {
+                        "description": "路由",
+                        "name": "url",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "备注",
+                        "name": "remark",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/actions/{id}": {
+            "put": {
+                "description": "添加接口",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "后台系统"
+                ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "路由",
+                        "name": "url",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "备注",
+                        "name": "remark",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {

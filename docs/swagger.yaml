@@ -17,32 +17,7 @@ info:
   title: 单点登录系统
   version: "1.0"
 paths:
-  /admin/action/add:
-    post:
-      consumes:
-      - application/x-www-form-urlencoded
-      description: 添加接口
-      parameters:
-      - description: 路由
-        in: query
-        name: url
-        required: true
-        type: string
-      - description: 备注
-        in: query
-        name: remark
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/util.Response'
-      tags:
-      - 后台系统
-  /admin/action/index:
+  /api/v1/actions:
     get:
       consumes:
       - application/x-www-form-urlencoded
@@ -56,6 +31,62 @@ paths:
         in: query
         name: page_size
         type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Response'
+      tags:
+      - 后台系统
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 添加接口
+      parameters:
+      - description: 路由
+        in: body
+        name: url
+        required: true
+        schema:
+          type: string
+      - description: 备注
+        in: body
+        name: remark
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Response'
+      tags:
+      - 后台系统
+  /api/v1/actions/{id}:
+    put:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 添加接口
+      parameters:
+      - description: ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 路由
+        in: query
+        name: url
+        required: true
+        type: string
+      - description: 备注
+        in: query
+        name: remark
+        required: true
+        type: string
       produces:
       - application/json
       responses:

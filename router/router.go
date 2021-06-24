@@ -2,8 +2,8 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wuzehv/passport/app/admin/action"
-	"github.com/wuzehv/passport/app/admin/index"
+	"github.com/wuzehv/passport/app/api/v1/action"
+	"github.com/wuzehv/passport/app/api/v1/index"
 	"github.com/wuzehv/passport/app/sso"
 	"github.com/wuzehv/passport/app/svc"
 	"github.com/wuzehv/passport/middleware"
@@ -36,13 +36,14 @@ func constructSso(router *gin.Engine) {
 
 // admin内部
 func constructAdmin(router *gin.Engine) {
-	r := router.Group("/admin")
-	r.Use(middleware.Admin())
+	r := router.Group("/api/v1")
+	r.Use(middleware.Api())
 	{
-		r.GET("/index/index", index.Index)
+		r.GET("/index", index.Index)
 
-		r.GET("/action/index", action.Index)
-		r.GET("/action/add", action.Index)
+		r.GET("/actions", action.Index)
+		r.POST("/actions", action.Add)
+		r.PUT("/actions/:id", action.Update)
 	}
 }
 
