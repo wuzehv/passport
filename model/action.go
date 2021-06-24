@@ -1,11 +1,7 @@
-package action
-
-import (
-	"github.com/wuzehv/passport/model/base"
-)
+package model
 
 type Action struct {
-	base.Model
+	Model
 	Url    string `gorm:"unique" json:"url"`
 	Remark string `gorm:"not null" json:"remark"`
 }

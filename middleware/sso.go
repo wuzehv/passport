@@ -2,8 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wuzehv/passport/model/base"
-	"github.com/wuzehv/passport/model/client"
+	"github.com/wuzehv/passport/model"
 	"github.com/wuzehv/passport/util"
 	"net/http"
 	"strconv"
@@ -13,14 +12,14 @@ import (
 func Sso() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		domain := c.Query(util.Domain)
-		var cl client.Client
+		var cl model.Client
 		err := cl.GetByDomain(domain)
 		if err != nil {
 			c.AbortWithError(http.StatusInternalServerError, util.SystemError)
 			return
 		}
 
-		if cl.Id > 0 && cl.Status != base.StatusNormal {
+		if cl.Id > 0 && cl.Status != model.StatusNormal {
 			c.AbortWithError(http.StatusForbidden, util.ClientDisabled)
 			return
 		}

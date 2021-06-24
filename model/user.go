@@ -1,15 +1,14 @@
-package user
+package model
 
 import (
 	"errors"
-	"github.com/wuzehv/passport/model/base"
 	"github.com/wuzehv/passport/service/db"
 	"gorm.io/gorm"
 	"time"
 )
 
 type User struct {
-	base.Model
+	Model
 	Email      string    `gorm:"unique" json:"email"`
 	Password   string    `gorm:"not null;type:varchar(255)" json:"-"`
 	Token      string    `gorm:"unique;not null;default:''" json:"-"`

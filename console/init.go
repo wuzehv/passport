@@ -3,12 +3,7 @@ package main
 
 import (
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/wuzehv/passport/model/action"
-	"github.com/wuzehv/passport/model/base"
-	"github.com/wuzehv/passport/model/client"
-	"github.com/wuzehv/passport/model/login/record"
-	"github.com/wuzehv/passport/model/session"
-	"github.com/wuzehv/passport/model/user"
+	"github.com/wuzehv/passport/model"
 	"github.com/wuzehv/passport/util"
 	"github.com/wuzehv/passport/util/config"
 	"gorm.io/driver/mysql"
@@ -51,44 +46,44 @@ func main() {
 		log.Fatalln(err.Error())
 	}
 
-	err = db.AutoMigrate(user.User{})
+	err = db.AutoMigrate(model.User{})
 	if err != nil {
 		panic(err)
 	}
 	log.Println("create users table done")
 
-	err = db.AutoMigrate(session.Session{})
+	err = db.AutoMigrate(model.Session{})
 	if err != nil {
 		panic(err)
 	}
 	log.Println("create tokens table done")
 
-	err = db.AutoMigrate(client.Client{})
+	err = db.AutoMigrate(model.Client{})
 	if err != nil {
 		panic(err)
 	}
 	log.Println("create clients table done")
 
-	err = db.AutoMigrate(record.Record{})
+	err = db.AutoMigrate(model.LoginRecord{})
 	if err != nil {
 		panic(err)
 	}
 	log.Println("create records table done")
 
-	err = db.AutoMigrate(action.Action{})
+	err = db.AutoMigrate(model.Action{})
 	if err != nil {
 		panic(err)
 	}
 	log.Println("create actions table done")
 
-	db.Create(&client.Client{Domain: "client.one.com:8081", Callback: "http://client.one.com:8081/callback", Secret: "123456", Status: base.StatusNormal})
-	db.Create(&client.Client{Domain: "client.two.com:8082", Callback: "http://client.two.com:8082/callback", Secret: "123456", Status: base.StatusNormal})
+	db.Create(&model.Client{Domain: "client.one.com:8081", Callback: "http://client.one.com:8081/callback", Secret: "123456", Status: model.StatusNormal})
+	db.Create(&model.Client{Domain: "client.two.com:8082", Callback: "http://client.two.com:8082/callback", Secret: "123456", Status: model.StatusNormal})
 
 	log.Println("initialize client done")
 
 	u = "admin@gmail.com"
 	up := "admin"
 	p := util.GenPassword(up)
-	db.Create(&user.User{Email: u, Password: p, Status: base.StatusNormal})
+	db.Create(&model.User{Email: u, Password: p, Status: model.StatusNormal})
 	log.Printf("initialize user: %s, password: %s\n", u, up)
 }

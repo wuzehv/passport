@@ -1,8 +1,7 @@
-package session
+package model
 
 import (
 	"errors"
-	"github.com/wuzehv/passport/model/base"
 	"github.com/wuzehv/passport/service/db"
 	"github.com/wuzehv/passport/util"
 	"gorm.io/gorm"
@@ -10,7 +9,7 @@ import (
 )
 
 type Session struct {
-	base.Model
+	Model
 	Token      string    `gorm:"unique;not null"`
 	UserId     uint      `gorm:"index;not null"`
 	ClientId   uint      `gorm:"index;not null"`

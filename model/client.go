@@ -1,14 +1,13 @@
-package client
+package model
 
 import (
 	"errors"
-	"github.com/wuzehv/passport/model/base"
 	"github.com/wuzehv/passport/service/db"
 	"gorm.io/gorm"
 )
 
 type Client struct {
-	base.Model
+	Model
 	Domain   string `gorm:"unique;not null"`
 	Callback string `gorm:"index;not null"`
 	Secret   string `gorm:"not null;type:varchar(255)"`

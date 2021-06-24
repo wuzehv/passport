@@ -3,8 +3,7 @@ package middleware
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/wuzehv/passport/model/base"
-	"github.com/wuzehv/passport/model/user"
+	"github.com/wuzehv/passport/model"
 	"github.com/wuzehv/passport/service/db"
 	"github.com/wuzehv/passport/util"
 	"github.com/wuzehv/passport/util/config"
@@ -28,9 +27,9 @@ func Admin() gin.HandlerFunc {
 			return
 		}
 
-		var u user.User
+		var u model.User
 		db.Db.First(&u, uid)
-		if u.Id == 0 || u.Status != base.StatusNormal {
+		if u.Id == 0 || u.Status != model.StatusNormal {
 			fmt.Fprintln(c.Writer, util.UserDisabled.Msg(nil))
 			return
 		}
