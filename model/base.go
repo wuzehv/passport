@@ -88,7 +88,7 @@ func Paginate(params *Param) (*PaginateResponse, error) {
 	return &res, nil
 }
 
-func Paginate2(c *gin.Context, params *Param) (*PaginateResponse, error) {
+func PaginateContext(c *gin.Context, params *Param) (*PaginateResponse, error) {
 	page, _ := strconv.Atoi(c.PostForm("page"))
 	pageSize, _ := strconv.Atoi(c.PostForm("page_size"))
 	params.Page = page

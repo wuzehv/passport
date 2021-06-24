@@ -9,7 +9,7 @@ definitions:
       message:
         type: string
     type: object
-host: http://sso.com:8099
+host: sso.com:8099
 info:
   contact:
     name: wuzehui

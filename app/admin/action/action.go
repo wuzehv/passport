@@ -7,18 +7,18 @@ import (
 	"net/http"
 )
 
-// @description 接口列表
-// @tags 后台系统
-// @accept application/x-www-form-urlencoded
-// @produce application/json
-// @param page query int false "页码"
-// @param page_size query int false "每页数量"
-// @success 200 {object} util.Response
-// @failure 200 {object} util.Response
-// @router /admin/action/index [GET]
+// @Description 接口列表
+// @Tags 后台系统
+// @Accept application/x-www-form-urlencoded
+// @Produce application/json
+// @Param page query int false "页码"
+// @Param page_size query int false "每页数量"
+// @Success 200 {object} util.Response
+// @Failure 200 {object} util.Response
+// @Router /admin/action/index [GET]
 func Index(c *gin.Context) {
 	var t model.Action
-	res, err := model.Paginate2(c, &model.Param{Table: &t})
+	res, err := model.PaginateContext(c, &model.Param{Table: &t})
 	if err != nil {
 		c.JSON(http.StatusOK, util.SystemError.Msg(nil))
 		return
@@ -27,15 +27,15 @@ func Index(c *gin.Context) {
 	c.JSON(http.StatusOK, util.Success.Msg(res))
 }
 
-// @description 添加接口
-// @tags 后台系统
+// @Description 添加接口
+// @Tags 后台系统
 // @Accept application/x-www-form-urlencoded
-// @produce application/json
-// @param url query string true "路由"
-// @param remark query string true "备注"
-// @success 200 {object} util.Response
-// @failure 200 {object} util.Response
-// @router /admin/action/add [POST]
+// @Produce application/json
+// @Param url query string true "路由"
+// @Param remark query string true "备注"
+// @Success 200 {object} util.Response
+// @Failure 200 {object} util.Response
+// @Router /admin/action/add [POST]
 func Add(c *gin.Context) {
 
 }

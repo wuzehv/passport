@@ -8,7 +8,7 @@
         },
         "version": "1.0"
     },
-    "host": "http://sso.com:8099",
+    "host": "sso.com:8099",
     "basePath": "/",
     "paths": {
         "/admin/action/add": {

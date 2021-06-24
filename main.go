@@ -6,12 +6,12 @@ import (
 	"log"
 )
 
-// @title 单点登录系统
-// @version 1.0
-// @description 单点登录系统api文档
-// @contact.name wuzehui
-// @contact.email
-// @host http://sso.com:8099
+// @Title 单点登录系统
+// @Version 1.0
+// @Description 单点登录系统api文档
+// @Contact.name wuzehui
+// @Contact.email
+// @Host sso.com:8099
 // @BasePath /
 func main() {
 	r := router.InitRouter()

@@ -40,9 +40,9 @@ func constructAdmin(router *gin.Engine) {
 	r.Use(middleware.Admin())
 	{
 		r.GET("/index/index", index.Index)
-		r.GET("/index/test", index.Test)
 
-		r.POST("/action/index", action.Index)
+		r.GET("/action/index", action.Index)
+		r.GET("/action/add", action.Index)
 	}
 }
 

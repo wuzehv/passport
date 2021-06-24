@@ -1,7 +1,6 @@
 package index
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/wuzehv/passport/model"
 	"github.com/wuzehv/passport/service/db"
@@ -19,8 +18,4 @@ func Index(c *gin.Context) {
 		"clients": cl,
 		"login":   true,
 	})
-}
-
-func Test(c *gin.Context) {
-	fmt.Fprint(c.Writer, "this is test page")
 }
