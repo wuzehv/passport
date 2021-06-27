@@ -74,27 +74,41 @@ var doc = `{
                 ],
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "路由",
                         "name": "url",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData",
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "description": "备注",
                         "name": "remark",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/util.Response"
                         }
@@ -104,7 +118,7 @@ var doc = `{
         },
         "/api/v1/actions/{id}": {
             "put": {
-                "description": "添加接口",
+                "description": "更新接口",
                 "consumes": [
                     "application/x-www-form-urlencoded"
                 ],
@@ -119,27 +133,45 @@ var doc = `{
                         "type": "integer",
                         "description": "ID",
                         "name": "id",
-                        "in": "query",
+                        "in": "formData",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "路由",
                         "name": "url",
-                        "in": "query",
+                        "in": "formData",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "备注",
                         "name": "remark",
-                        "in": "query",
+                        "in": "formData",
                         "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/util.Response"
                         }

@@ -1,17 +1,23 @@
 package action
 
 import (
-	"fmt"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/wuzehv/passport/model"
 	"github.com/wuzehv/passport/service/db"
 	"github.com/wuzehv/passport/util"
+	"gorm.io/gorm"
 	"net/http"
 )
 
-type Form struct {
+type AddForm struct {
 	Url    string `form:"url" valid:"Required"`
 	Remark string `form:"remark" valid:"Required"`
+}
+
+type UpdateForm struct {
+	Id int `form:"id" valid:"Required"`
+	AddForm
 }
 
 // @Description 接口列表
@@ -38,36 +44,66 @@ func Index(c *gin.Context) {
 // @Tags 后台系统
 // @Accept application/x-www-form-urlencoded
 // @Produce application/json
-// @Param url body string true "路由"
-// @Param remark body string true "备注"
+// @Param url formData string true "路由"
+// @Param remark formData string true "备注"
 // @Success 200 {object} util.Response
-// @Failure 200 {object} util.Response
+// @Failure 400 {object} util.Response
+// @Failure 404 {object} util.Response
+// @Failure 500 {object} util.Response
 // @Router /api/v1/actions [POST]
 func Add(c *gin.Context) {
-	var json Form
-	if err := c.ShouldBind(&json); err != nil {
-		fmt.Println(json)
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	var data AddForm
+	if err := c.ShouldBind(&data); err != nil {
+		c.JSON(http.StatusBadRequest, util.ParamsError.Msg(err.Error()))
 		return
 	}
 
 	var action model.Action
-	action.Url, action.Remark = json.Url, json.Remark
-	db.Db.Save(&action)
+	action.Url, action.Remark = data.Url, data.Remark
+	if err := db.Db.Save(&action).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
+		return
+	}
 
-	c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
+	c.JSON(http.StatusOK, util.Success.Msg(nil))
 }
 
-// @Description 添加接口
+// @Description 更新接口
 // @Tags 后台系统
 // @Accept application/x-www-form-urlencoded
 // @Produce application/json
-// @Param id query int true "ID"
-// @Param url query string true "路由"
-// @Param remark query string true "备注"
+// @Param id formData int true "ID"
+// @Param url formData string true "路由"
+// @Param remark formData string true "备注"
 // @Success 200 {object} util.Response
-// @Failure 200 {object} util.Response
+// @Failure 400 {object} util.Response
+// @Failure 404 {object} util.Response
+// @Failure 500 {object} util.Response
 // @Router /api/v1/actions/{id} [PUT]
 func Update(c *gin.Context) {
+	var data UpdateForm
+	if err := c.ShouldBind(&data); err != nil {
+		c.JSON(http.StatusBadRequest, util.ParamsError.Msg(err.Error()))
+		return
+	}
 
+	var action model.Action
+	err := db.Db.First(&action, data.Id).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		c.JSON(http.StatusNotFound, util.ParamsError.Msg(nil))
+		return
+	}
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
+		return
+	}
+
+	action.Url, action.Remark = data.Url, data.Remark
+	if err := db.Db.Save(&action).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
+		return
+	}
+
+	c.JSON(http.StatusOK, util.Success.Msg(nil))
 }

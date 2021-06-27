@@ -46,22 +46,32 @@ paths:
       description: 添加接口
       parameters:
       - description: 路由
-        in: body
+        in: formData
         name: url
         required: true
-        schema:
-          type: string
+        type: string
       - description: 备注
-        in: body
+        in: formData
         name: remark
         required: true
-        schema:
-          type: string
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/util.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/util.Response'
+        "500":
+          description: Internal Server Error
           schema:
             $ref: '#/definitions/util.Response'
       tags:
@@ -70,20 +80,20 @@ paths:
     put:
       consumes:
       - application/x-www-form-urlencoded
-      description: 添加接口
+      description: 更新接口
       parameters:
       - description: ID
-        in: query
+        in: formData
         name: id
         required: true
         type: integer
       - description: 路由
-        in: query
+        in: formData
         name: url
         required: true
         type: string
       - description: 备注
-        in: query
+        in: formData
         name: remark
         required: true
         type: string
@@ -92,6 +102,18 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/util.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/util.Response'
+        "500":
+          description: Internal Server Error
           schema:
             $ref: '#/definitions/util.Response'
       tags:
