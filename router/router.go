@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/wuzehv/passport/app/api/v1/action"
+	"github.com/wuzehv/passport/app/api/v1/client"
 	"github.com/wuzehv/passport/app/api/v1/index"
 	"github.com/wuzehv/passport/app/sso"
 	"github.com/wuzehv/passport/app/svc"
@@ -10,7 +11,7 @@ import (
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	_ "github.com/wuzehv/passport/docs"
+	_ "github.com/wuzehv/passport/doc"
 )
 
 func construct(router *gin.Engine) {
@@ -44,6 +45,10 @@ func constructAdmin(router *gin.Engine) {
 		r.GET("/actions", action.Index)
 		r.POST("/actions", action.Add)
 		r.PUT("/actions/:id", action.Update)
+
+		r.GET("/clients", client.Index)
+		r.POST("/clients", client.Add)
+		r.PUT("/clients/:id", client.Update)
 	}
 }
 

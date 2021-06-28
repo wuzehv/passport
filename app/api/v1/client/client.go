@@ -1,4 +1,4 @@
-package action
+package client
 
 import (
 	"errors"
@@ -11,20 +11,21 @@ import (
 )
 
 type Form struct {
-	Url    string `form:"url" valid:"Required" minLength:"1" maxLength:"255"`    // 路径
-	Remark string `form:"remark" valid:"Required" minLength:"1" maxLength:"255"` // 备注
+	Domain   string `form:"domain" valid:"Required" binding:"required" minLength:"1" maxLength:"255"`   // 域名
+	Callback string `form:"callback" valid:"Required" binding:"required" minLength:"1" maxLength:"255"` // 回调地址
+	Secret   string `form:"secret" valid:"Required" binding:"required" minLength:"1" maxLength:"255"`   // 用来签名校验的密钥
 }
 
-// @Description 接口列表
-// @Tags 接口管理
+// @Description 客户端列表
+// @Tags 客户端管理
 // @Accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param _ query validator.Pager false "_"
-// @Success 200 {object} util.Response{data=model.Action}
+// @Success 200 {object} util.Response{data=model.Client}
 // @Failure 500 {object} util.Response
-// @Router /api/v1/actions [GET]
+// @Router /api/v1/clients [GET]
 func Index(c *gin.Context) {
-	var t model.Action
+	var t model.Client
 	res, err := model.PaginateContext(c, &model.Param{Table: &t})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
@@ -34,8 +35,8 @@ func Index(c *gin.Context) {
 	c.JSON(http.StatusOK, util.Success.Msg(res))
 }
 
-// @Description 添加接口
-// @Tags 接口管理
+// @Description 添加客户端
+// @Tags 客户端管理
 // @Accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param _ formData Form false "_"
@@ -43,7 +44,7 @@ func Index(c *gin.Context) {
 // @Failure 400 {object} util.Response
 // @Failure 404 {object} util.Response
 // @Failure 500 {object} util.Response
-// @Router /api/v1/actions [POST]
+// @Router /api/v1/clients [POST]
 func Add(c *gin.Context) {
 	var data Form
 	if err := c.ShouldBind(&data); err != nil {
@@ -51,9 +52,13 @@ func Add(c *gin.Context) {
 		return
 	}
 
-	var action model.Action
-	action.Url, action.Remark = data.Url, data.Remark
-	if err := db.Db.Save(&action).Error; err != nil {
+	cli := model.Client{
+		Domain:   data.Domain,
+		Callback: data.Callback,
+		Secret:   data.Secret,
+		Status:   model.StatusNormal,
+	}
+	if err := db.Db.Save(&cli).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
 		return
 	}
@@ -61,8 +66,8 @@ func Add(c *gin.Context) {
 	c.JSON(http.StatusOK, util.Success.Msg(nil))
 }
 
-// @Description 更新接口
-// @Tags 接口管理
+// @Description 客户端更新
+// @Tags 客户端管理
 // @Accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param id path int true "ID"
@@ -71,7 +76,7 @@ func Add(c *gin.Context) {
 // @Failure 400 {object} util.Response
 // @Failure 404 {object} util.Response
 // @Failure 500 {object} util.Response
-// @Router /api/v1/actions/{id} [PUT]
+// @Router /api/v1/clients/{id} [PUT]
 func Update(c *gin.Context) {
 	id := c.Param("id")
 	var data Form
@@ -80,8 +85,8 @@ func Update(c *gin.Context) {
 		return
 	}
 
-	var action model.Action
-	err := db.Db.First(&action, id).Error
+	var cli model.Client
+	err := db.Db.First(&cli, id).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		c.JSON(http.StatusNotFound, util.ParamsError.Msg(nil))
 		return
@@ -92,8 +97,10 @@ func Update(c *gin.Context) {
 		return
 	}
 
-	action.Url, action.Remark = data.Url, data.Remark
-	if err := db.Db.Save(&action).Error; err != nil {
+	cli.Domain = data.Domain
+	cli.Callback = data.Callback
+	cli.Secret = data.Secret
+	if err := db.Db.Save(&cli).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
 		return
 	}

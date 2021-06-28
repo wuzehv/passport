@@ -1,0 +1,290 @@
+basePath: /
+definitions:
+  model.Action:
+    properties:
+      id:
+        type: integer
+      remark:
+        type: string
+      url:
+        type: string
+    type: object
+  model.Client:
+    properties:
+      callback:
+        type: string
+      domain:
+        type: string
+      id:
+        type: integer
+      secret:
+        type: string
+    type: object
+  util.Response:
+    properties:
+      code:
+        type: integer
+      data:
+        type: object
+      message:
+        type: string
+    type: object
+host: sso.com:8099
+info:
+  contact:
+    name: wuzehui
+  description: 单点登录系统api文档
+  title: 单点登录系统
+  version: "1.0"
+paths:
+  /api/v1/actions:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 接口列表
+      parameters:
+      - description: 页码
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        minimum: 1
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.Action'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Response'
+      tags:
+      - 接口管理
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 添加接口
+      parameters:
+      - description: 备注
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: remark
+        type: string
+      - description: 路径
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: url
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/util.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Response'
+      tags:
+      - 接口管理
+  /api/v1/actions/{id}:
+    put:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 更新接口
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 备注
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: remark
+        type: string
+      - description: 路径
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: url
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/util.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Response'
+      tags:
+      - 接口管理
+  /api/v1/clients:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 客户端列表
+      parameters:
+      - description: 页码
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        minimum: 1
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.Client'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Response'
+      tags:
+      - 客户端管理
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 添加客户端
+      parameters:
+      - description: 回调地址
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: callback
+        required: true
+        type: string
+      - description: 域名
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: domain
+        required: true
+        type: string
+      - description: 用来签名校验的密钥
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: secret
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/util.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Response'
+      tags:
+      - 客户端管理
+  /api/v1/clients/{id}:
+    put:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 客户端更新
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 回调地址
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: callback
+        required: true
+        type: string
+      - description: 域名
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: domain
+        required: true
+        type: string
+      - description: 用来签名校验的密钥
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: secret
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/util.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Response'
+      tags:
+      - 客户端管理
+swagger: "2.0"

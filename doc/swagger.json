@@ -1,0 +1,438 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "单点登录系统api文档",
+        "title": "单点登录系统",
+        "contact": {
+            "name": "wuzehui"
+        },
+        "version": "1.0"
+    },
+    "host": "sso.com:8099",
+    "basePath": "/",
+    "paths": {
+        "/api/v1/actions": {
+            "get": {
+                "description": "接口列表",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "接口管理"
+                ],
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "每页数量",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.Action"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "添加接口",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "接口管理"
+                ],
+                "parameters": [
+                    {
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "备注",
+                        "name": "remark",
+                        "in": "formData"
+                    },
+                    {
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "路径",
+                        "name": "url",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/actions/{id}": {
+            "put": {
+                "description": "更新接口",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "接口管理"
+                ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "备注",
+                        "name": "remark",
+                        "in": "formData"
+                    },
+                    {
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "路径",
+                        "name": "url",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/clients": {
+            "get": {
+                "description": "客户端列表",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "客户端管理"
+                ],
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "每页数量",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/util.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.Client"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "添加客户端",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "客户端管理"
+                ],
+                "parameters": [
+                    {
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "回调地址",
+                        "name": "callback",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "域名",
+                        "name": "domain",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "用来签名校验的密钥",
+                        "name": "secret",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/clients/{id}": {
+            "put": {
+                "description": "客户端更新",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "客户端管理"
+                ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "回调地址",
+                        "name": "callback",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "域名",
+                        "name": "domain",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "用来签名校验的密钥",
+                        "name": "secret",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.Action": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "remark": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Client": {
+            "type": "object",
+            "properties": {
+                "callback": {
+                    "type": "string"
+                },
+                "domain": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "secret": {
+                    "type": "string"
+                }
+            }
+        },
+        "util.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "object"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

@@ -64,8 +64,12 @@ func Paginate(params *Param) (*PaginateResponse, error) {
 		Items:    []map[string]interface{}{},
 	}
 
-	dc := db.Db.Model(params.Table)
-	dl := db.Db.Model(params.Table).Scopes(PaginateScopes(params.Page, params.PageSize))
+	if params.Order == "" {
+		params.Order = "id desc"
+	}
+
+	dc := db.Db.Model(params.Table).Order(params.Order)
+	dl := db.Db.Model(params.Table).Order(params.Order).Scopes(PaginateScopes(params.Page, params.PageSize))
 
 	if params.Where != "" {
 		if err := dc.Where(params.Where, params.Bind).Count(&res.Total).Error; err != nil {
@@ -89,8 +93,8 @@ func Paginate(params *Param) (*PaginateResponse, error) {
 }
 
 func PaginateContext(c *gin.Context, params *Param) (*PaginateResponse, error) {
-	page, _ := strconv.Atoi(c.PostForm("page"))
-	pageSize, _ := strconv.Atoi(c.PostForm("page_size"))
+	page, _ := strconv.Atoi(c.Query("page"))
+	pageSize, _ := strconv.Atoi(c.Query("page_size"))
 	params.Page = page
 	params.PageSize = pageSize
 	return Paginate(params)
