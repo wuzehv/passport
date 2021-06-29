@@ -26,7 +26,7 @@ func construct(router *gin.Engine) {
 // sso主页
 func constructSso(router *gin.Engine) {
 	r := router.Group("/")
-	r.Use(middleware.Sso())
+	r.Use(middleware.Cors(), middleware.Sso())
 	{
 		r.GET("/", sso.Index)
 		r.GET("/sso/index", sso.Index)
@@ -39,7 +39,7 @@ func constructSso(router *gin.Engine) {
 // admin内部
 func constructAdmin(router *gin.Engine) {
 	r := router.Group("/api/v1")
-	r.Use(middleware.Api())
+	r.Use(middleware.Cors(), middleware.Api())
 	{
 		r.GET("/index", index.Index)
 
