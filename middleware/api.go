@@ -14,15 +14,22 @@ import (
 // Api admin接口
 func Api() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		f := func() {
+			// 显式的删除cookie
+			c.SetCookie(util.CookieFlag, "false", -1, "/", "", !config.IsDev(), true)
+		}
+
 		token, err := c.Cookie(util.CookieFlag)
 		if err != nil {
-			c.Redirect(http.StatusTemporaryRedirect, "/")
+			f()
+			c.AbortWithStatusJSON(http.StatusTemporaryRedirect, util.UserNotLogin.Msg(nil))
 			return
 		}
 
 		uid, err := strconv.Atoi(token[32:])
 		if err != nil {
-			c.Redirect(http.StatusTemporaryRedirect, "/")
+			f()
+			c.AbortWithStatusJSON(http.StatusTemporaryRedirect, util.UserNotLogin.Msg(nil))
 			return
 		}
 
@@ -35,10 +42,8 @@ func Api() gin.HandlerFunc {
 
 		// 判断登录是否过期
 		if u.Token != token || time.Now().After(u.ExpireTime) {
-			// 显式的删除cookie
-			c.SetCookie(util.CookieFlag, "false", -1, "/", "", !config.IsDev(), true)
-
-			c.Redirect(http.StatusTemporaryRedirect, "/")
+			f()
+			c.AbortWithStatusJSON(http.StatusTemporaryRedirect, util.UserNotLogin.Msg(nil))
 			return
 		}
 

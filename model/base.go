@@ -24,6 +24,9 @@ const (
 const (
 	DefaultPageSize = 10
 	MaxPageSize     = 100
+
+	GenderMale   = 1
+	GenderFemale = 2
 )
 
 type Base interface {

@@ -24,8 +24,14 @@ definitions:
     properties:
       email:
         type: string
+      gender:
+        type: integer
       id:
         type: integer
+      mobile:
+        type: string
+      realname:
+        type: string
     type: object
   util.Response:
     properties:
@@ -376,11 +382,33 @@ paths:
         name: email
         required: true
         type: string
+      - default: 1
+        description: 性别
+        in: formData
+        maximum: 2
+        minimum: 1
+        name: gender
+        required: true
+        type: integer
+      - description: 手机号
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: mobile
+        required: true
+        type: string
       - description: 密码
         in: formData
         maxLength: 255
         minLength: 1
         name: password
+        required: true
+        type: string
+      - description: 真实姓名
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: realname
         required: true
         type: string
       produces:
@@ -458,11 +486,33 @@ paths:
         name: email
         required: true
         type: string
+      - default: 1
+        description: 性别
+        in: formData
+        maximum: 2
+        minimum: 1
+        name: gender
+        required: true
+        type: integer
+      - description: 手机号
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: mobile
+        required: true
+        type: string
       - description: 密码
         in: formData
         maxLength: 255
         minLength: 1
         name: password
+        required: true
+        type: string
+      - description: 真实姓名
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: realname
         required: true
         type: string
       produces:

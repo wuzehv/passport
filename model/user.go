@@ -10,9 +10,12 @@ import (
 type User struct {
 	Model
 	Email      string    `gorm:"unique" json:"email"`
+	Realname   string    `gorm:"not null;type:varchar(255)" json:"realname"`
+	Gender     int       `gorm:"not null;type:tinyint" json:"gender"`
+	Mobile     string    `gorm:"unique;not null;type:varchar(255)" json:"mobile"`
 	Password   string    `gorm:"not null;type:varchar(255)" json:"-"`
 	Token      string    `gorm:"index;not null;default:''" json:"-"`
-	ExpireTime time.Time `gorm:"unique;default:null" json:"-"`
+	ExpireTime time.Time `gorm:"default:null" json:"-"`
 	Status     uint      `gorm:"not null;type:tinyint unsigned" json:"-"`
 }
 

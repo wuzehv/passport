@@ -1,13 +1,15 @@
 .PHONY: doc clean
 
 swag = swag init -o doc
+fmt = gofmt -l -w ./
 
 run:
+	$(fmt)
 	$(swag)
 	go run main.go
 
 fmt:
-	gofmt -l -w ./
+	$(fmt)
 
 init:
 	go run console/init.go

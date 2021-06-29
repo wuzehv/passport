@@ -19,6 +19,7 @@ const (
 	// 内部状态码
 	UsernamePasswdNotMatch
 	UsernamePasswdFailNumOut
+	UserNotLogin
 )
 
 var errors = [...]string{
@@ -35,6 +36,7 @@ var errors = [...]string{
 	SystemError:              "system error",
 	UsernamePasswdNotMatch:   "用户名密码错误",
 	UsernamePasswdFailNumOut: "失败次数过多",
+	UserNotLogin:             "用户未登录",
 }
 
 // 通用key

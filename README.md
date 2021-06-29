@@ -6,6 +6,10 @@
 * [go-redis](https://redis.uptrace.dev/)
 * [gin-swagger](https://github.com/swaggo/gin-swagger)
 
+## 开发规范
+* 目录采用单数形式
+* 表名复数形式
+
 ## 使用
 1. 配置hosts
 ```etc
@@ -102,3 +106,7 @@ $str .= "123456";
 
 echo strtoupper(md5($str)), PHP_EOL;
 ```
+
+
+## FAQ
+* gin-swagger的结构体名称使用json包修改名称，如果使用gin包的参数绑定，并且是form请求方式，需要与`form`别名一致

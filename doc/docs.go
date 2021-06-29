@@ -533,11 +533,39 @@ var doc = `{
                         "required": true
                     },
                     {
+                        "maximum": 2,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 1,
+                        "description": "性别",
+                        "name": "gender",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "手机号",
+                        "name": "mobile",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
                         "maxLength": 255,
                         "minLength": 1,
                         "type": "string",
                         "description": "密码",
                         "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "真实姓名",
+                        "name": "realname",
                         "in": "formData",
                         "required": true
                     }
@@ -600,11 +628,39 @@ var doc = `{
                         "required": true
                     },
                     {
+                        "maximum": 2,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 1,
+                        "description": "性别",
+                        "name": "gender",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "手机号",
+                        "name": "mobile",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
                         "maxLength": 255,
                         "minLength": 1,
                         "type": "string",
                         "description": "密码",
                         "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "真实姓名",
+                        "name": "realname",
                         "in": "formData",
                         "required": true
                     }
@@ -730,8 +786,17 @@ var doc = `{
                 "email": {
                     "type": "string"
                 },
+                "gender": {
+                    "type": "integer"
+                },
                 "id": {
                     "type": "integer"
+                },
+                "mobile": {
+                    "type": "string"
+                },
+                "realname": {
+                    "type": "string"
                 }
             }
         },

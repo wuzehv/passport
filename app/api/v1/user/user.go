@@ -11,8 +11,11 @@ import (
 )
 
 type Form struct {
-	Email    string `form:"email" valid:"Required" binding:"required" minLength:"1" maxLength:"255"`    // 用户邮箱
-	Password string `form:"password" valid:"Required" binding:"required" minLength:"1" maxLength:"255"` // 密码
+	Email    string `form:"email" valid:"Required" binding:"required" minLength:"1" maxLength:"255"`                    // 用户邮箱
+	RealName string `form:"realname" json:"realname" valid:"Required" binding:"required" minLength:"1" maxLength:"255"` // 真实姓名
+	Gender   int    `form:"gender" valid:"Required" binding:"required" minimum:"1" maximum:"2" default:"1"`             // 性别
+	Mobile   string `form:"mobile" valid:"Required" binding:"required" minLength:"1" maxLength:"255"`                   // 手机号
+	Password string `form:"password" valid:"Required" binding:"required" minLength:"1" maxLength:"255"`                 // 密码
 }
 
 // @Description 用户列表
@@ -54,6 +57,9 @@ func Add(c *gin.Context) {
 	d := model.User{
 		Email:    data.Email,
 		Password: util.GenPassword(data.Password),
+		Gender:   data.Gender,
+		Mobile:   data.Mobile,
+		Realname: data.RealName,
 		Status:   model.StatusNormal,
 	}
 	if err := db.Db.Save(&d).Error; err != nil {
@@ -96,7 +102,11 @@ func Update(c *gin.Context) {
 	}
 
 	d.Email = data.Email
+	d.Realname = data.RealName
+	d.Mobile = data.Mobile
+	d.Gender = data.Gender
 	d.Password = util.GenPassword(data.Password)
+
 	if err := db.Db.Save(&d).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
 		return
