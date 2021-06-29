@@ -5,6 +5,7 @@ import (
 	"github.com/wuzehv/passport/app/api/v1/action"
 	"github.com/wuzehv/passport/app/api/v1/client"
 	"github.com/wuzehv/passport/app/api/v1/index"
+	"github.com/wuzehv/passport/app/api/v1/user"
 	"github.com/wuzehv/passport/app/sso"
 	"github.com/wuzehv/passport/app/svc"
 	"github.com/wuzehv/passport/middleware"
@@ -42,6 +43,11 @@ func constructAdmin(router *gin.Engine) {
 	{
 		r.GET("/index", index.Index)
 
+		r.GET("/users", user.Index)
+		r.POST("/users", user.Add)
+		r.PUT("/users/:id", user.Update)
+		r.PATCH("/users/:id", user.Disable)
+
 		r.GET("/actions", action.Index)
 		r.POST("/actions", action.Add)
 		r.PUT("/actions/:id", action.Update)
@@ -49,6 +55,7 @@ func constructAdmin(router *gin.Engine) {
 		r.GET("/clients", client.Index)
 		r.POST("/clients", client.Add)
 		r.PUT("/clients/:id", client.Update)
+		r.PATCH("/clients/:id", client.Disable)
 	}
 }
 

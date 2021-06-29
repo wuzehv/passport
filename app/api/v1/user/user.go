@@ -1,4 +1,4 @@
-package action
+package user
 
 import (
 	"errors"
@@ -11,20 +11,20 @@ import (
 )
 
 type Form struct {
-	Url    string `form:"url" valid:"Required" minLength:"1" maxLength:"255"`    // 路径
-	Remark string `form:"remark" valid:"Required" minLength:"1" maxLength:"255"` // 备注
+	Email    string `form:"email" valid:"Required" binding:"required" minLength:"1" maxLength:"255"`    // 用户邮箱
+	Password string `form:"password" valid:"Required" binding:"required" minLength:"1" maxLength:"255"` // 密码
 }
 
-// @Description 接口列表
-// @Tags 接口管理
+// @Description 用户列表
+// @Tags 用户管理
 // @Accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param _ query validator.Pager false "_"
-// @Success 200 {object} util.Response{data=model.Action}
+// @Success 200 {object} util.Response{data=model.User}
 // @Failure 500 {object} util.Response
-// @Router /api/v1/actions [GET]
+// @Router /api/v1/users [GET]
 func Index(c *gin.Context) {
-	var t model.Action
+	var t model.User
 	res, err := model.PaginateContext(c, &model.Param{Table: &t})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
@@ -34,8 +34,8 @@ func Index(c *gin.Context) {
 	c.JSON(http.StatusOK, util.Success.Msg(res))
 }
 
-// @Description 添加接口
-// @Tags 接口管理
+// @Description 添加用户
+// @Tags 用户管理
 // @Accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param _ formData Form false "_"
@@ -43,7 +43,7 @@ func Index(c *gin.Context) {
 // @Failure 400 {object} util.Response
 // @Failure 404 {object} util.Response
 // @Failure 500 {object} util.Response
-// @Router /api/v1/actions [POST]
+// @Router /api/v1/users [POST]
 func Add(c *gin.Context) {
 	var data Form
 	if err := c.ShouldBind(&data); err != nil {
@@ -51,8 +51,11 @@ func Add(c *gin.Context) {
 		return
 	}
 
-	var d model.Action
-	d.Url, d.Remark = data.Url, data.Remark
+	d := model.User{
+		Email:    data.Email,
+		Password: util.GenPassword(data.Password),
+		Status:   model.StatusNormal,
+	}
 	if err := db.Db.Save(&d).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
 		return
@@ -61,8 +64,8 @@ func Add(c *gin.Context) {
 	c.JSON(http.StatusOK, util.Success.Msg(nil))
 }
 
-// @Description 更新接口
-// @Tags 接口管理
+// @Description 用户更新
+// @Tags 用户管理
 // @Accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param id path int true "ID"
@@ -71,7 +74,7 @@ func Add(c *gin.Context) {
 // @Failure 400 {object} util.Response
 // @Failure 404 {object} util.Response
 // @Failure 500 {object} util.Response
-// @Router /api/v1/actions/{id} [PUT]
+// @Router /api/v1/users/{id} [PUT]
 func Update(c *gin.Context) {
 	id := c.Param("id")
 	var data Form
@@ -80,7 +83,7 @@ func Update(c *gin.Context) {
 		return
 	}
 
-	var d model.Action
+	var d model.User
 	err := db.Db.First(&d, id).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		c.JSON(http.StatusNotFound, util.ParamsError.Msg(nil))
@@ -92,8 +95,55 @@ func Update(c *gin.Context) {
 		return
 	}
 
-	d.Url, d.Remark = data.Url, data.Remark
+	d.Email = data.Email
+	d.Password = util.GenPassword(data.Password)
 	if err := db.Db.Save(&d).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
+		return
+	}
+
+	c.JSON(http.StatusOK, util.Success.Msg(nil))
+}
+
+// @Description 用户启用/禁用
+// @Tags 用户管理
+// @Accept application/x-www-form-urlencoded
+// @Produce application/json
+// @Param id path int true "ID"
+// @Param disabled query bool true "启用：false 禁用：true"
+// @Success 200 {object} util.Response
+// @Failure 400 {object} util.Response
+// @Failure 404 {object} util.Response
+// @Failure 500 {object} util.Response
+// @Router /api/v1/users/{id} [PATCH]
+func Disable(c *gin.Context) {
+	id := c.Param("id")
+
+	var d model.User
+	m := db.Db.First(&d, id)
+	err := m.Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		c.JSON(http.StatusNotFound, util.ParamsError.Msg(nil))
+		return
+	}
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
+		return
+	}
+
+	disabled := c.Query("disabled")
+	status := model.StatusDisabled
+	if disabled == "false" {
+		status = model.StatusNormal
+	}
+
+	if uint(status) == d.Status {
+		c.JSON(http.StatusOK, util.Success.Msg(nil))
+		return
+	}
+
+	if err := m.Update("status", status).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
 		return
 	}

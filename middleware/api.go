@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/wuzehv/passport/model"
 	"github.com/wuzehv/passport/service/db"
@@ -30,7 +29,7 @@ func Api() gin.HandlerFunc {
 		var u model.User
 		db.Db.First(&u, uid)
 		if u.Id == 0 || u.Status != model.StatusNormal {
-			fmt.Fprintln(c.Writer, util.UserDisabled.Msg(nil))
+			c.AbortWithStatusJSON(http.StatusForbidden, util.UserDisabled.Msg(nil))
 			return
 		}
 

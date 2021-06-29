@@ -22,10 +22,11 @@ type app struct {
 }
 
 type db struct {
-	Host   string
-	User   string
-	Passwd string
-	DbName string
+	Host    string
+	User    string
+	Passwd  string
+	DbName  string
+	Charset string
 }
 
 type redis struct {

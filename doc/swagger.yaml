@@ -20,6 +20,13 @@ definitions:
       secret:
         type: string
     type: object
+  model.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+    type: object
   util.Response:
     properties:
       code:
@@ -235,6 +242,42 @@ paths:
       tags:
       - 客户端管理
   /api/v1/clients/{id}:
+    patch:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 客户端启用/禁用
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 启用：false 禁用：true
+        in: query
+        name: disabled
+        required: true
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/util.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Response'
+      tags:
+      - 客户端管理
     put:
       consumes:
       - application/x-www-form-urlencoded
@@ -287,4 +330,160 @@ paths:
             $ref: '#/definitions/util.Response'
       tags:
       - 客户端管理
+  /api/v1/users:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 用户列表
+      parameters:
+      - description: 页码
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        minimum: 1
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/util.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.User'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Response'
+      tags:
+      - 用户管理
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 添加用户
+      parameters:
+      - description: 用户邮箱
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: email
+        required: true
+        type: string
+      - description: 密码
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/util.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Response'
+      tags:
+      - 用户管理
+  /api/v1/users/{id}:
+    patch:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 用户启用/禁用
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 启用：false 禁用：true
+        in: query
+        name: disabled
+        required: true
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/util.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Response'
+      tags:
+      - 用户管理
+    put:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 用户更新
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 用户邮箱
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: email
+        required: true
+        type: string
+      - description: 密码
+        in: formData
+        maxLength: 255
+        minLength: 1
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/util.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.Response'
+      tags:
+      - 用户管理
 swagger: "2.0"

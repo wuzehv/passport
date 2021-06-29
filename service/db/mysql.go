@@ -14,7 +14,7 @@ import (
 var Db *gorm.DB
 
 func init() {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true", config.Db.User, config.Db.Passwd, config.Db.Host, config.Db.DbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=true", config.Db.User, config.Db.Passwd, config.Db.Host, config.Db.DbName, config.Db.Charset)
 
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags),
@@ -26,11 +26,23 @@ func init() {
 	)
 
 	var err error
-	Db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+	Db, err = gorm.Open(mysql.New(mysql.Config{
+		DSN:                      dsn,
+		DisableDatetimePrecision: true,
+	}), &gorm.Config{
 		Logger: newLogger,
 	})
 
 	if err != nil {
 		log.Fatalf("mysql init error: %v\n", err)
 	}
+
+	sqlDB, err := Db.DB()
+	if err != nil {
+		log.Fatalf("get sql db error: %v\n", err)
+	}
+
+	// 初始化连接池
+	sqlDB.SetMaxIdleConns(10)
+	sqlDB.SetMaxOpenConns(100)
 }

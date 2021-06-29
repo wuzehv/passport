@@ -16,7 +16,7 @@ DROP DATABASE IF EXISTS passport
 `
 
 var passportDb = `
-CREATE DATABASE IF NOT EXISTS passport DEFAULT CHARACTER SET utf8
+CREATE DATABASE IF NOT EXISTS passport DEFAULT CHARACTER SET utf8mb4
 `
 
 func main() {
@@ -24,9 +24,15 @@ func main() {
 	passwd := config.Db.Passwd
 	host := config.Db.Host
 	dbName := config.Db.DbName
+	charset := config.Db.Charset
 
-	dsn := u + ":" + passwd + "@tcp(" + host + ")/?parseTime=true"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	dsn := u + ":" + passwd + "@tcp(" + host + ")/?charset=" + charset + "&parseTime=true"
+	c := mysql.Config{
+		DSN:                      dsn,
+		DisableDatetimePrecision: true,
+	}
+
+	db, err := gorm.Open(mysql.New(c), &gorm.Config{})
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
@@ -40,8 +46,12 @@ func main() {
 	db.Exec(passportDb)
 	log.Println("create database done")
 
-	dsn = u + ":" + passwd + "@tcp(" + host + ")/" + dbName + "?parseTime=true"
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	dsn = u + ":" + passwd + "@tcp(" + host + ")/" + dbName + "?charset=" + charset + "&parseTime=true"
+	c = mysql.Config{
+		DSN:                      dsn,
+		DisableDatetimePrecision: true,
+	}
+	db, err = gorm.Open(mysql.New(c), &gorm.Config{})
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
@@ -81,8 +91,8 @@ func main() {
 
 	log.Println("initialize client done")
 
-	u = "api@gmail.com"
-	up := "api"
+	u = "admin@gmail.com"
+	up := "admin"
 	p := util.GenPassword(up)
 	db.Create(&model.User{Email: u, Password: p, Status: model.StatusNormal})
 	log.Printf("initialize user: %s, password: %s\n", u, up)

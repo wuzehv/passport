@@ -21,7 +21,7 @@
 
 * 初始化表结构
 ```shell
-./run.sh init
+./run.sh init # 或 make init
 ```
 
 3. 编译主程序，默认监听8099端口
@@ -29,7 +29,7 @@
 4. 启动两个客户端程序
 ```shell
 # 默认监听8081
-./run.sh client
+./run.sh client # 或 make client1
 
 # 监听8082
 ./run.sh client -addr=127.0.0.1:8082

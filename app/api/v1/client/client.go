@@ -52,13 +52,13 @@ func Add(c *gin.Context) {
 		return
 	}
 
-	cli := model.Client{
+	d := model.Client{
 		Domain:   data.Domain,
 		Callback: data.Callback,
 		Secret:   data.Secret,
 		Status:   model.StatusNormal,
 	}
-	if err := db.Db.Save(&cli).Error; err != nil {
+	if err := db.Db.Save(&d).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
 		return
 	}
@@ -85,8 +85,8 @@ func Update(c *gin.Context) {
 		return
 	}
 
-	var cli model.Client
-	err := db.Db.First(&cli, id).Error
+	var d model.Client
+	err := db.Db.First(&d, id).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		c.JSON(http.StatusNotFound, util.ParamsError.Msg(nil))
 		return
@@ -97,10 +97,56 @@ func Update(c *gin.Context) {
 		return
 	}
 
-	cli.Domain = data.Domain
-	cli.Callback = data.Callback
-	cli.Secret = data.Secret
-	if err := db.Db.Save(&cli).Error; err != nil {
+	d.Domain = data.Domain
+	d.Callback = data.Callback
+	d.Secret = data.Secret
+	if err := db.Db.Save(&d).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
+		return
+	}
+
+	c.JSON(http.StatusOK, util.Success.Msg(nil))
+}
+
+// @Description 客户端启用/禁用
+// @Tags 客户端管理
+// @Accept application/x-www-form-urlencoded
+// @Produce application/json
+// @Param id path int true "ID"
+// @Param disabled query bool true "启用：false 禁用：true"
+// @Success 200 {object} util.Response
+// @Failure 400 {object} util.Response
+// @Failure 404 {object} util.Response
+// @Failure 500 {object} util.Response
+// @Router /api/v1/clients/{id} [PATCH]
+func Disable(c *gin.Context) {
+	id := c.Param("id")
+
+	var d model.Client
+	m := db.Db.First(&d, id)
+	err := m.Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		c.JSON(http.StatusNotFound, util.ParamsError.Msg(nil))
+		return
+	}
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
+		return
+	}
+
+	disabled := c.Query("disabled")
+	status := model.StatusDisabled
+	if disabled == "false" {
+		status = model.StatusNormal
+	}
+
+	if uint(status) == d.Status {
+		c.JSON(http.StatusOK, util.Success.Msg(nil))
+		return
+	}
+
+	if err := m.Update("status", status).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
 		return
 	}
