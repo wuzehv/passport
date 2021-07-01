@@ -64,7 +64,14 @@ sso.com:8099
 - [ ] IP白名单
 - [X] 登录错误次数限制
 - [ ] 后台功能列表
+  - [X] 接口管理
+  - [X] 用户管理
+  - [X] 客户端管理
+  - [ ] 菜单管理
+  - [ ] 权限管理
+  - [ ] validator详细使用
 - [ ] 业务日志处理
+- [ ] 考虑jwt使用
 - [X] sso中心后台
 - [X] swagger(http://sso.com:8099/swagger/index.html#/)
 

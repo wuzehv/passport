@@ -1,47 +1,76 @@
 package rdb
 
 import (
-	"context"
 	"encoding/json"
-	"github.com/go-redis/redis/v8"
+	//"context"
+	//"encoding/json"
+	"github.com/gomodule/redigo/redis"
 	"github.com/wuzehv/passport/util/config"
 	"log"
+
+	//"log"
 	"time"
 )
 
-var Rdb *redis.Client
+var Rdb *redis.Pool
 
 func init() {
-	Rdb = redis.NewClient(&redis.Options{
-		Addr:     config.Redis.Host,
-		Password: config.Redis.Passwd,
-		DB:       config.Redis.DbNum,
-	})
+	Rdb = &redis.Pool{
+		MaxIdle:     config.Redis.MaxIdleConn,
+		MaxActive:   config.Redis.MaxActiveConn,
+		IdleTimeout: config.Redis.MaxConnIdleTimeout * time.Second,
 
-	var ctx = context.Background()
-	_, err := Rdb.Ping(ctx).Result()
-	// redis初始化错误
-	if err != nil {
-		log.Fatalf("redis init error: %v\n", err)
+		Dial: func() (redis.Conn, error) {
+			c, err := redis.Dial("tcp", config.Redis.Host)
+			if err != nil {
+				log.Fatalf("redis init error: %v\n", err)
+				return nil, err
+			}
+
+			if config.Redis.Passwd != "" {
+				if _, err := c.Do("AUTH", config.Redis.Passwd); err != nil {
+					c.Close()
+					log.Fatalf("redis auth error: %v\n", err)
+					return nil, err
+				}
+			}
+
+			if _, err := c.Do("SELECT", config.Redis.DbNum); err != nil {
+				c.Close()
+				log.Fatalf("redis select db error: %v\n", err)
+				return nil, err
+			}
+
+			if _, err := c.Do("PING"); err != nil {
+				log.Fatalf("redis ping error: %v\n", err)
+				return nil, err
+			}
+
+			return c, nil
+		},
 	}
 }
 
-func SetJson(k string, v interface{}, expiration time.Duration) {
-	var ctx = context.Background()
+func SetJson(k string, v interface{}, expiration time.Duration) (reply interface{}, err error) {
+	conn := Rdb.Get()
+	defer conn.Close()
+
 	str, _ := json.Marshal(v)
-	Rdb.Set(ctx, k, str, expiration)
+	return conn.Do("SET", k, str, "EX", int(expiration))
 }
 
 func GetJson(k string, v interface{}) bool {
-	var ctx = context.Background()
-	cache, err := Rdb.Get(ctx, k).Result()
-	if err != nil && err != redis.Nil {
+	conn := Rdb.Get()
+	defer conn.Close()
+
+	cache, err := conn.Do("GET", k)
+	if err != nil {
 		log.Printf("redis error: %v\n", err)
 		return false
 	}
 
-	if cache != "" {
-		json.Unmarshal([]byte(cache), &v)
+	if cache != nil && cache != "" {
+		json.Unmarshal(cache.([]byte), &v)
 		return true
 	}
 

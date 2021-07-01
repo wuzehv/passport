@@ -12,8 +12,14 @@ import (
 	"time"
 )
 
-// Session 客户端回调确认接口
-// 更新session状态为已登录
+// @Description 客户端回调确认接口，更新session状态为已登录
+// @Tags Svc接口
+// @Accept application/x-www-form-urlencoded
+// @Produce application/json
+// @Param _ formData util.SvcRequest false "_"
+// @Success 200 {object} util.Response
+// @Failure 200 {object} util.Response
+// @Router /svc/session [POST]
 func Session(c *gin.Context) {
 	tmp, _ := c.Get(util.Session)
 	s := tmp.(*model.Session)
@@ -30,8 +36,14 @@ func Session(c *gin.Context) {
 	c.JSON(http.StatusOK, util.Success.Msg(nil))
 }
 
-// UserInfo 获取用户信息
-// 客户端业务代码执行之前，需要调用该接口获取用户信息
+// @Description 客户端业务代码执行之前，调用该接口获取用户信息
+// @Tags Svc接口
+// @Accept application/x-www-form-urlencoded
+// @Produce application/json
+// @Param _ formData util.SvcRequest false "_"
+// @Success 200 {object} util.Response{data=model.User}
+// @Failure 200 {object} util.Response
+// @Router /svc/userinfo [POST]
 func Userinfo(c *gin.Context) {
 	tmp, _ := c.Get(util.Session)
 	s := tmp.(*model.Session)

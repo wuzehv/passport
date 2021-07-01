@@ -99,7 +99,8 @@ var doc = `{
                         "type": "string",
                         "description": "备注",
                         "name": "remark",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "maxLength": 255,
@@ -107,7 +108,8 @@ var doc = `{
                         "type": "string",
                         "description": "路径",
                         "name": "url",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -164,7 +166,8 @@ var doc = `{
                         "type": "string",
                         "description": "备注",
                         "name": "remark",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "maxLength": 255,
@@ -172,7 +175,8 @@ var doc = `{
                         "type": "string",
                         "description": "路径",
                         "name": "url",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -400,8 +404,10 @@ var doc = `{
                         }
                     }
                 }
-            },
-            "patch": {
+            }
+        },
+        "/api/v1/clients/{id}/toggle-status": {
+            "post": {
                 "description": "客户端启用/禁用",
                 "consumes": [
                     "application/x-www-form-urlencoded"
@@ -418,13 +424,6 @@ var doc = `{
                         "description": "ID",
                         "name": "id",
                         "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "boolean",
-                        "description": "启用：false 禁用：true",
-                        "name": "disabled",
-                        "in": "query",
                         "required": true
                     }
                 ],
@@ -691,9 +690,11 @@ var doc = `{
                         }
                     }
                 }
-            },
-            "patch": {
-                "description": "用户启用/禁用",
+            }
+        },
+        "/api/v1/users/{id}/reset-password": {
+            "post": {
+                "description": "重置密码",
                 "consumes": [
                     "application/x-www-form-urlencoded"
                 ],
@@ -712,10 +713,21 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "type": "boolean",
-                        "description": "启用：false 禁用：true",
-                        "name": "disabled",
-                        "in": "query",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "新密码",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "确认密码",
+                        "name": "password_verify",
+                        "in": "formData",
                         "required": true
                     }
                 ],
@@ -740,6 +752,159 @@ var doc = `{
                     },
                     "500": {
                         "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users/{id}/toggle-status": {
+            "post": {
+                "description": "用户启用/禁用",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/svc/session": {
+            "post": {
+                "description": "客户端回调确认接口，更新session状态为已登录",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Svc接口"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "客户端域名",
+                        "name": "domain",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "签名",
+                        "name": "sign",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "时间戳",
+                        "name": "timestamp",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "登录token",
+                        "name": "token",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/svc/userinfo": {
+            "post": {
+                "description": "客户端业务代码执行之前，调用该接口获取用户信息",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Svc接口"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "客户端域名",
+                        "name": "domain",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "签名",
+                        "name": "sign",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "时间戳",
+                        "name": "timestamp",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "登录token",
+                        "name": "token",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/util.Response"
                         }

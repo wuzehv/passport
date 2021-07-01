@@ -46,7 +46,8 @@ func constructAdmin(router *gin.Engine) {
 		r.GET("/users", user.Index)
 		r.POST("/users", user.Add)
 		r.PUT("/users/:id", user.Update)
-		r.PATCH("/users/:id", user.Disable)
+		r.POST("/users/:id/toggle-status", user.ToggleStatus)
+		r.POST("/users/:id/reset-password", user.ResetPassword)
 
 		r.GET("/actions", action.Index)
 		r.POST("/actions", action.Add)
@@ -55,7 +56,7 @@ func constructAdmin(router *gin.Engine) {
 		r.GET("/clients", client.Index)
 		r.POST("/clients", client.Add)
 		r.PUT("/clients/:id", client.Update)
-		r.PATCH("/clients/:id", client.Disable)
+		r.POST("/clients/:id/toggle-status", client.ToggleStatus)
 	}
 }
 

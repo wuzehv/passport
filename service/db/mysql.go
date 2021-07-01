@@ -43,6 +43,7 @@ func init() {
 	}
 
 	// 初始化连接池
-	sqlDB.SetMaxIdleConns(10)
-	sqlDB.SetMaxOpenConns(100)
+	sqlDB.SetMaxIdleConns(config.Db.MaxIdleConn)
+	sqlDB.SetMaxOpenConns(config.Db.MaxActiveConn)
+	sqlDB.SetConnMaxLifetime(config.Db.MaxConnIdleTimeout)
 }

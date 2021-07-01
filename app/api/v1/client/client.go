@@ -113,13 +113,12 @@ func Update(c *gin.Context) {
 // @Accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param id path int true "ID"
-// @Param disabled query bool true "启用：false 禁用：true"
 // @Success 200 {object} util.Response
 // @Failure 400 {object} util.Response
 // @Failure 404 {object} util.Response
 // @Failure 500 {object} util.Response
-// @Router /api/v1/clients/{id} [PATCH]
-func Disable(c *gin.Context) {
+// @Router /api/v1/clients/{id}/toggle-status [POST]
+func ToggleStatus(c *gin.Context) {
 	id := c.Param("id")
 
 	var d model.Client
@@ -135,15 +134,9 @@ func Disable(c *gin.Context) {
 		return
 	}
 
-	disabled := c.Query("disabled")
-	status := model.StatusDisabled
-	if disabled == "false" {
-		status = model.StatusNormal
-	}
-
+	status := model.StatusNormal
 	if uint(status) == d.Status {
-		c.JSON(http.StatusOK, util.Success.Msg(nil))
-		return
+		status = model.StatusDisabled
 	}
 
 	if err := m.Update("status", status).Error; err != nil {

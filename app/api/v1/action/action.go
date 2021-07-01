@@ -11,8 +11,8 @@ import (
 )
 
 type Form struct {
-	Url    string `form:"url" valid:"Required" minLength:"1" maxLength:"255"`    // 路径
-	Remark string `form:"remark" valid:"Required" minLength:"1" maxLength:"255"` // 备注
+	Url    string `form:"url" valid:"Required" binding:"required" minLength:"1" maxLength:"255"`    // 路径
+	Remark string `form:"remark" valid:"Required" binding:"required" minLength:"1" maxLength:"255"` // 备注
 }
 
 // @Description 接口列表

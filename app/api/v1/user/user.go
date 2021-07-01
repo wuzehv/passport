@@ -120,13 +120,12 @@ func Update(c *gin.Context) {
 // @Accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param id path int true "ID"
-// @Param disabled query bool true "启用：false 禁用：true"
 // @Success 200 {object} util.Response
 // @Failure 400 {object} util.Response
 // @Failure 404 {object} util.Response
 // @Failure 500 {object} util.Response
-// @Router /api/v1/users/{id} [PATCH]
-func Disable(c *gin.Context) {
+// @Router /api/v1/users/{id}/toggle-status [POST]
+func ToggleStatus(c *gin.Context) {
 	id := c.Param("id")
 
 	var d model.User
@@ -142,18 +141,63 @@ func Disable(c *gin.Context) {
 		return
 	}
 
-	disabled := c.Query("disabled")
-	status := model.StatusDisabled
-	if disabled == "false" {
-		status = model.StatusNormal
-	}
-
+	status := model.StatusNormal
 	if uint(status) == d.Status {
-		c.JSON(http.StatusOK, util.Success.Msg(nil))
-		return
+		status = model.StatusDisabled
 	}
 
 	if err := m.Update("status", status).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
+		return
+	}
+
+	c.JSON(http.StatusOK, util.Success.Msg(nil))
+}
+
+type ResetPasswordForm struct {
+	Password       string `form:"password" valid:"Required" binding:"required" minLength:"1" maxLength:"255"`                               // 新密码
+	PasswordVerify string `form:"password_verify" json:"password_verify" valid:"Required" binding:"required" minLength:"1" maxLength:"255"` // 确认密码
+}
+
+// @Description 重置密码
+// @Tags 用户管理
+// @Accept application/x-www-form-urlencoded
+// @Produce application/json
+// @Param id path int true "ID"
+// @Param _ formData ResetPasswordForm false "_"
+// @Success 200 {object} util.Response
+// @Failure 400 {object} util.Response
+// @Failure 404 {object} util.Response
+// @Failure 500 {object} util.Response
+// @Router /api/v1/users/{id}/reset-password [POST]
+func ResetPassword(c *gin.Context) {
+	id := c.Param("id")
+
+	var d model.User
+	m := db.Db.First(&d, id)
+	err := m.Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		c.JSON(http.StatusNotFound, util.ParamsError.Msg(nil))
+		return
+	}
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
+		return
+	}
+
+	var data ResetPasswordForm
+	if err := c.ShouldBind(&data); err != nil {
+		c.JSON(http.StatusBadRequest, util.ParamsError.Msg(err.Error()))
+		return
+	}
+
+	if data.Password != data.PasswordVerify {
+		c.JSON(http.StatusOK, util.ParamsError.Msg(nil))
+		return
+	}
+
+	if err := m.Update("password", util.GenPassword(data.Password)).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
 		return
 	}

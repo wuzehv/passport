@@ -118,6 +118,8 @@ func httpRequest(url string, token string) (interface{}, error) {
 		postData.Add(k, v)
 	}
 
+	log.Printf("request: %s, %+v\n", ssoUrl, m)
+
 	res, err := http.PostForm(ssoUrl, postData)
 	if err != nil {
 		log.Fatalln(err)

@@ -5,6 +5,7 @@ import (
 	"github.com/go-ini/ini"
 	log2 "log"
 	"os"
+	"time"
 )
 
 const (
@@ -22,17 +23,23 @@ type app struct {
 }
 
 type db struct {
-	Host    string
-	User    string
-	Passwd  string
-	DbName  string
-	Charset string
+	Host               string
+	User               string
+	Passwd             string
+	DbName             string
+	Charset            string
+	MaxIdleConn        int
+	MaxActiveConn      int
+	MaxConnIdleTimeout time.Duration
 }
 
 type redis struct {
-	Host   string
-	Passwd string
-	DbNum  int
+	Host               string
+	Passwd             string
+	DbNum              int
+	MaxIdleConn        int
+	MaxActiveConn      int
+	MaxConnIdleTimeout time.Duration
 }
 
 type log struct {

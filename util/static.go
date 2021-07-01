@@ -55,10 +55,10 @@ const (
 )
 
 type SvcRequest struct {
-	Token     string `form:"token"`
-	Domain    string `form:"domain"`
-	Timestamp string `form:"timestamp"`
-	Sign      string `form:"sign"`
+	Token     string `form:"token" valid:"Required" binding:"required"`     // 登录token
+	Domain    string `form:"domain" valid:"Required" binding:"required"`    // 客户端域名
+	Timestamp string `form:"timestamp" valid:"Required" binding:"required"` // 时间戳
+	Sign      string `form:"sign" valid:"Required" binding:"required"`      // 签名
 }
 
 // 响应结构体
