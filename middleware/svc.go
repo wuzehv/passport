@@ -5,7 +5,8 @@ import (
 	"github.com/wuzehv/passport/model"
 	"github.com/wuzehv/passport/service/db"
 	"github.com/wuzehv/passport/service/rdb"
-	"github.com/wuzehv/passport/util"
+	"github.com/wuzehv/passport/util/common"
+	"github.com/wuzehv/passport/util/static"
 	"net/http"
 	"net/url"
 	"time"
@@ -14,15 +15,15 @@ import (
 // Svc svc调用入口，校验token
 func Svc() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var res util.SvcRequest
+		var res static.SvcRequest
 		if c.ShouldBind(&res) != nil {
-			c.AbortWithStatusJSON(http.StatusOK, util.ParamsError.Msg(nil))
+			c.AbortWithStatusJSON(http.StatusOK, static.ParamsError.Msg(nil))
 			return
 		}
 
 		var u model.User
 		if rdb.GetJson(res.Token, &u) {
-			c.AbortWithStatusJSON(http.StatusOK, util.Success.Msg(u))
+			c.AbortWithStatusJSON(http.StatusOK, static.Success.Msg(u))
 			return
 		}
 
@@ -32,21 +33,21 @@ func Svc() gin.HandlerFunc {
 		var cl model.Client
 		err := cl.GetByDomain(domain)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusOK, util.SystemError.Msg(nil))
+			c.AbortWithStatusJSON(http.StatusOK, static.SystemError.Msg(nil))
 			return
 		}
 
 		if cl.Id == 0 || cl.Status != model.StatusNormal {
-			c.AbortWithStatusJSON(http.StatusOK, util.ClientDisabled.Msg(nil))
+			c.AbortWithStatusJSON(http.StatusOK, static.ClientDisabled.Msg(nil))
 			return
 		}
 
 		m := make(map[string]string)
-		m[util.Token] = res.Token
-		m[util.Timestamp] = res.Timestamp
-		m[util.Domain] = res.Domain
-		if util.GenSign(m, cl.Secret) != res.Sign {
-			c.AbortWithStatusJSON(http.StatusOK, util.SignatureError.Msg(nil))
+		m[static.Token] = res.Token
+		m[static.Timestamp] = res.Timestamp
+		m[static.Domain] = res.Domain
+		if common.GenSign(m, cl.Secret) != res.Sign {
+			c.AbortWithStatusJSON(http.StatusOK, static.SignatureError.Msg(nil))
 			return
 		}
 
@@ -55,35 +56,35 @@ func Svc() gin.HandlerFunc {
 		var s model.Session
 		err = s.GetByToken(t)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusOK, util.SystemError.Msg(nil))
+			c.AbortWithStatusJSON(http.StatusOK, static.SystemError.Msg(nil))
 			return
 		}
 
 		if s.Id == 0 {
-			c.AbortWithStatusJSON(http.StatusOK, util.TokenNotExists.Msg(nil))
+			c.AbortWithStatusJSON(http.StatusOK, static.TokenNotExists.Msg(nil))
 			return
 		}
 
 		db.Db.First(&u, s.UserId)
 
 		if u.Id == 0 || u.Status != model.StatusNormal {
-			c.AbortWithStatusJSON(http.StatusOK, util.UserDisabled.Msg(nil))
+			c.AbortWithStatusJSON(http.StatusOK, static.UserDisabled.Msg(nil))
 			return
 		}
 
 		// 客户端和session不匹配
 		if cl.Id != s.ClientId {
-			c.AbortWithStatusJSON(http.StatusOK, util.SystemError.Msg(nil))
+			c.AbortWithStatusJSON(http.StatusOK, static.SystemError.Msg(nil))
 			return
 		}
 
 		// 过期检测
 		if time.Now().After(s.ExpireTime) {
-			c.AbortWithStatusJSON(http.StatusOK, util.SessionExpired.Msg(nil))
+			c.AbortWithStatusJSON(http.StatusOK, static.SessionExpired.Msg(nil))
 			return
 		}
 
-		c.Set(util.Session, &s)
-		c.Set(util.User, &u)
+		c.Set(static.Session, &s)
+		c.Set(static.User, &u)
 	}
 }

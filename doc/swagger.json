@@ -25,14 +25,12 @@
                 ],
                 "parameters": [
                     {
-                        "minimum": 1,
                         "type": "integer",
                         "description": "页码",
                         "name": "page",
                         "in": "query"
                     },
                     {
-                        "minimum": 1,
                         "type": "integer",
                         "description": "每页数量",
                         "name": "page_size",
@@ -45,7 +43,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/util.Response"
+                                    "$ref": "#/definitions/static.Response"
                                 },
                                 {
                                     "type": "object",
@@ -61,7 +59,7 @@
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -79,8 +77,6 @@
                 ],
                 "parameters": [
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "备注",
                         "name": "remark",
@@ -88,10 +84,8 @@
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
-                        "description": "路径",
+                        "description": "uri",
                         "name": "url",
                         "in": "formData",
                         "required": true
@@ -101,25 +95,25 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -146,8 +140,6 @@
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "备注",
                         "name": "remark",
@@ -155,10 +147,8 @@
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
-                        "description": "路径",
+                        "description": "uri",
                         "name": "url",
                         "in": "formData",
                         "required": true
@@ -168,25 +158,25 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -206,14 +196,12 @@
                 ],
                 "parameters": [
                     {
-                        "minimum": 1,
                         "type": "integer",
                         "description": "页码",
                         "name": "page",
                         "in": "query"
                     },
                     {
-                        "minimum": 1,
                         "type": "integer",
                         "description": "每页数量",
                         "name": "page_size",
@@ -226,7 +214,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/util.Response"
+                                    "$ref": "#/definitions/static.Response"
                                 },
                                 {
                                     "type": "object",
@@ -242,7 +230,7 @@
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -260,8 +248,6 @@
                 ],
                 "parameters": [
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "回调地址",
                         "name": "callback",
@@ -269,8 +255,6 @@
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "域名",
                         "name": "domain",
@@ -278,8 +262,6 @@
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "用来签名校验的密钥",
                         "name": "secret",
@@ -291,25 +273,25 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -336,8 +318,6 @@
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "回调地址",
                         "name": "callback",
@@ -345,8 +325,6 @@
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "域名",
                         "name": "domain",
@@ -354,8 +332,6 @@
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "用来签名校验的密钥",
                         "name": "secret",
@@ -367,25 +343,25 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -416,25 +392,25 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -454,14 +430,12 @@
                 ],
                 "parameters": [
                     {
-                        "minimum": 1,
                         "type": "integer",
                         "description": "页码",
                         "name": "page",
                         "in": "query"
                     },
                     {
-                        "minimum": 1,
                         "type": "integer",
                         "description": "每页数量",
                         "name": "page_size",
@@ -474,7 +448,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/util.Response"
+                                    "$ref": "#/definitions/static.Response"
                                 },
                                 {
                                     "type": "object",
@@ -490,7 +464,7 @@
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -508,8 +482,6 @@
                 ],
                 "parameters": [
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "用户邮箱",
                         "name": "email",
@@ -517,18 +489,13 @@
                         "required": true
                     },
                     {
-                        "maximum": 2,
-                        "minimum": 1,
                         "type": "integer",
-                        "default": 1,
                         "description": "性别",
                         "name": "gender",
                         "in": "formData",
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "手机号",
                         "name": "mobile",
@@ -536,8 +503,6 @@
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "密码",
                         "name": "password",
@@ -545,8 +510,6 @@
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "真实姓名",
                         "name": "realname",
@@ -558,25 +521,25 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -603,8 +566,6 @@
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "用户邮箱",
                         "name": "email",
@@ -612,18 +573,13 @@
                         "required": true
                     },
                     {
-                        "maximum": 2,
-                        "minimum": 1,
                         "type": "integer",
-                        "default": 1,
                         "description": "性别",
                         "name": "gender",
                         "in": "formData",
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "手机号",
                         "name": "mobile",
@@ -631,8 +587,6 @@
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "密码",
                         "name": "password",
@@ -640,8 +594,6 @@
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "真实姓名",
                         "name": "realname",
@@ -653,25 +605,25 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -720,25 +672,25 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -769,25 +721,25 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -839,7 +791,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -891,7 +843,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -950,7 +902,7 @@
                 }
             }
         },
-        "util.Response": {
+        "static.Response": {
             "type": "object",
             "properties": {
                 "code": {

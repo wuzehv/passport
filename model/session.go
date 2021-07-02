@@ -3,7 +3,7 @@ package model
 import (
 	"errors"
 	"github.com/wuzehv/passport/service/db"
-	"github.com/wuzehv/passport/util"
+	"github.com/wuzehv/passport/util/common"
 	"gorm.io/gorm"
 	"time"
 )
@@ -32,7 +32,7 @@ func (s *Session) Base() {}
 
 func NewSession(userId, clientId uint) Session {
 	s := Session{
-		Token:      util.GenToken(),
+		Token:      common.GenToken(),
 		UserId:     userId,
 		ClientId:   clientId,
 		Status:     StatusInit,

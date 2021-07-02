@@ -1,8 +1,9 @@
-package util
+package common
 
 import (
 	"crypto/md5"
 	"fmt"
+	"github.com/wuzehv/passport/util/static"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"math/rand"
@@ -48,7 +49,7 @@ func GenSign(m map[string]string, secret string) string {
 	keyArr := make(key, len(m))
 	i := 0
 	for k, _ := range m {
-		if k == Sign {
+		if k == static.Sign {
 			continue
 		}
 

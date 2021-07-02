@@ -6,8 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/wuzehv/passport/model"
 	"github.com/wuzehv/passport/service/db"
-	"github.com/wuzehv/passport/util"
+	"github.com/wuzehv/passport/util/common"
 	"github.com/wuzehv/passport/util/config"
+	"github.com/wuzehv/passport/util/static"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -15,12 +16,12 @@ import (
 )
 
 func Index(c *gin.Context) {
-	tmp, _ := c.Get(util.Client)
+	tmp, _ := c.Get(static.Client)
 	cl := tmp.(*model.Client)
 
-	jump := c.GetString(util.Jump)
+	jump := c.GetString(static.Jump)
 
-	uid := c.GetInt(util.Uid)
+	uid := c.GetInt(static.Uid)
 
 	if uid == 0 {
 		c.HTML(http.StatusOK, "sso/login", gin.H{
@@ -34,7 +35,7 @@ func Index(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
-	jump := c.GetString(util.Jump)
+	jump := c.GetString(static.Jump)
 
 	name := c.PostForm("username")
 	passwd := c.PostForm("password")
@@ -43,11 +44,11 @@ func Login(c *gin.Context) {
 	var u model.User
 	err := u.GetByEmail(name)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusOK, util.SystemError.Msg(nil))
+		c.AbortWithStatusJSON(http.StatusOK, static.SystemError.Msg(nil))
 		return
 	}
 
-	tmp, _ := c.Get(util.Client)
+	tmp, _ := c.Get(static.Client)
 	cl := tmp.(*model.Client)
 
 	// 初始化登录信息
@@ -61,30 +62,30 @@ func Login(c *gin.Context) {
 	if model.FailNumOut() {
 		r.Type = model.TypeOther
 		db.Db.Save(&r)
-		c.AbortWithStatusJSON(http.StatusOK, util.UsernamePasswdFailNumOut.Msg(nil))
+		c.AbortWithStatusJSON(http.StatusOK, static.UsernamePasswdFailNumOut.Msg(nil))
 		return
 	}
 
-	if !util.VerifyPassword(u.Password, passwd) {
+	if !common.VerifyPassword(u.Password, passwd) {
 		r.Type = model.TypeFail
 		db.Db.Save(&r)
-		c.AbortWithStatusJSON(http.StatusOK, util.UsernamePasswdNotMatch.Msg(nil))
+		c.AbortWithStatusJSON(http.StatusOK, static.UsernamePasswdNotMatch.Msg(nil))
 		return
 	}
 
 	// 初始化token
-	token := util.GenToken() + strconv.FormatUint(uint64(u.Id), 10)
+	token := common.GenToken() + strconv.FormatUint(uint64(u.Id), 10)
 	u.Token = token
 	exp, _ := time.Parse("2006-01-02 15:04:05", time.Now().Add(model.ExpireTime).Format("2006-01-02")+" 04:00:00")
 	u.ExpireTime = exp
 	db.Db.Save(&u)
 	// 设置会话为浏览器关闭即失效
-	c.SetCookie(util.CookieFlag, token, 0, "/", "", !config.IsDev(), true)
+	c.SetCookie(static.CookieFlag, token, 0, "/", "", !config.IsDev(), true)
 
 	// 重置所有客户端session状态
 	err = model.LogoutAll(u.Id)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusOK, util.SystemError.Msg(nil))
+		c.AbortWithStatusJSON(http.StatusOK, static.SystemError.Msg(nil))
 		return
 	}
 
@@ -101,12 +102,12 @@ func commonDeal(c *gin.Context, cl *model.Client, userId uint, jump string) {
 	s := model.NewSession(userId, cl.Id)
 
 	callbackParams := url.Values{}
-	callbackParams.Add(util.Token, s.Token)
-	callbackParams.Add(util.Jump, jump)
+	callbackParams.Add(static.Token, s.Token)
+	callbackParams.Add(static.Jump, jump)
 
 	callbackUrl.RawQuery = callbackParams.Encode()
 
-	isSso := c.GetBool(util.Sso)
+	isSso := c.GetBool(static.Sso)
 
 	if isSso {
 		c.HTML(http.StatusOK, "sso/redirect", gin.H{
@@ -119,9 +120,9 @@ func commonDeal(c *gin.Context, cl *model.Client, userId uint, jump string) {
 }
 
 func Logout(c *gin.Context) {
-	uid := c.GetInt(util.Uid)
+	uid := c.GetInt(static.Uid)
 	model.LogoutAll(uint(uid))
 
-	c.SetCookie(util.CookieFlag, "false", -1, "/", "", !config.IsDev(), true)
+	c.SetCookie(static.CookieFlag, "false", -1, "/", "", !config.IsDev(), true)
 	c.HTML(http.StatusOK, "sso/logout", gin.H{})
 }

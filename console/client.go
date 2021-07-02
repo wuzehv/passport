@@ -5,8 +5,9 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/wuzehv/passport/util"
+	"github.com/wuzehv/passport/util/common"
 	"github.com/wuzehv/passport/util/config"
+	"github.com/wuzehv/passport/util/static"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -108,10 +109,10 @@ func httpRequest(url string, token string) (interface{}, error) {
 	ssoUrl := ssoDomain + port + url
 
 	m := make(map[string]string)
-	m[util.Token] = token
-	m[util.Domain] = domain
-	m[util.Timestamp] = strconv.FormatInt(time.Now().Unix(), 10)
-	m[util.Sign] = util.GenSign(m, Secret)
+	m[static.Token] = token
+	m[static.Domain] = domain
+	m[static.Timestamp] = strconv.FormatInt(time.Now().Unix(), 10)
+	m[static.Sign] = common.GenSign(m, Secret)
 
 	postData := url2.Values{}
 	for k, v := range m {
@@ -133,7 +134,7 @@ func httpRequest(url string, token string) (interface{}, error) {
 
 	log.Printf("get response: %s\n", str)
 
-	var d util.Response
+	var d static.Response
 	if err = json.Unmarshal(str, &d); err != nil {
 		log.Fatalln(d, err)
 	}

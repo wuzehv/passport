@@ -3,7 +3,7 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/wuzehv/passport/model"
-	"github.com/wuzehv/passport/util"
+	"github.com/wuzehv/passport/util/static"
 	"net/http"
 	"strconv"
 )
@@ -11,36 +11,36 @@ import (
 // Sso sso中心页面入口
 func Sso() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		domain := c.Query(util.Domain)
+		domain := c.Query(static.Domain)
 		var cl model.Client
 		err := cl.GetByDomain(domain)
 		if err != nil {
-			c.AbortWithError(http.StatusInternalServerError, util.SystemError)
+			c.AbortWithError(http.StatusInternalServerError, static.SystemError)
 			return
 		}
 
 		if cl.Id > 0 && cl.Status != model.StatusNormal {
-			c.AbortWithError(http.StatusForbidden, util.ClientDisabled)
+			c.AbortWithError(http.StatusForbidden, static.ClientDisabled)
 			return
 		}
 
-		c.Set(util.Sso, cl.Id != 0)
-		c.Set(util.Client, &cl)
-		c.Set(util.Jump, c.Query(util.Jump))
-		c.Set(util.Uid, 0)
+		c.Set(static.Sso, cl.Id != 0)
+		c.Set(static.Client, &cl)
+		c.Set(static.Jump, c.Query(static.Jump))
+		c.Set(static.Uid, 0)
 
 		// 根据token解析出用户信息
-		token, err := c.Cookie(util.CookieFlag)
+		token, err := c.Cookie(static.CookieFlag)
 		if err != nil {
 			return
 		}
 
 		uid, err := strconv.Atoi(token[32:])
 		if err != nil {
-			c.AbortWithError(http.StatusInternalServerError, util.TokenParseError)
+			c.AbortWithError(http.StatusInternalServerError, static.TokenParseError)
 			return
 		}
 
-		c.Set(util.Uid, uid)
+		c.Set(static.Uid, uid)
 	}
 }

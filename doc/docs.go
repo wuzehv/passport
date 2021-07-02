@@ -40,14 +40,12 @@ var doc = `{
                 ],
                 "parameters": [
                     {
-                        "minimum": 1,
                         "type": "integer",
                         "description": "页码",
                         "name": "page",
                         "in": "query"
                     },
                     {
-                        "minimum": 1,
                         "type": "integer",
                         "description": "每页数量",
                         "name": "page_size",
@@ -60,7 +58,7 @@ var doc = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/util.Response"
+                                    "$ref": "#/definitions/static.Response"
                                 },
                                 {
                                     "type": "object",
@@ -76,7 +74,7 @@ var doc = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -94,8 +92,6 @@ var doc = `{
                 ],
                 "parameters": [
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "备注",
                         "name": "remark",
@@ -103,10 +99,8 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
-                        "description": "路径",
+                        "description": "uri",
                         "name": "url",
                         "in": "formData",
                         "required": true
@@ -116,25 +110,25 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -161,8 +155,6 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "备注",
                         "name": "remark",
@@ -170,10 +162,8 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
-                        "description": "路径",
+                        "description": "uri",
                         "name": "url",
                         "in": "formData",
                         "required": true
@@ -183,25 +173,25 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -221,14 +211,12 @@ var doc = `{
                 ],
                 "parameters": [
                     {
-                        "minimum": 1,
                         "type": "integer",
                         "description": "页码",
                         "name": "page",
                         "in": "query"
                     },
                     {
-                        "minimum": 1,
                         "type": "integer",
                         "description": "每页数量",
                         "name": "page_size",
@@ -241,7 +229,7 @@ var doc = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/util.Response"
+                                    "$ref": "#/definitions/static.Response"
                                 },
                                 {
                                     "type": "object",
@@ -257,7 +245,7 @@ var doc = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -275,8 +263,6 @@ var doc = `{
                 ],
                 "parameters": [
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "回调地址",
                         "name": "callback",
@@ -284,8 +270,6 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "域名",
                         "name": "domain",
@@ -293,8 +277,6 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "用来签名校验的密钥",
                         "name": "secret",
@@ -306,25 +288,25 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -351,8 +333,6 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "回调地址",
                         "name": "callback",
@@ -360,8 +340,6 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "域名",
                         "name": "domain",
@@ -369,8 +347,6 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "用来签名校验的密钥",
                         "name": "secret",
@@ -382,25 +358,25 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -431,25 +407,25 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -469,14 +445,12 @@ var doc = `{
                 ],
                 "parameters": [
                     {
-                        "minimum": 1,
                         "type": "integer",
                         "description": "页码",
                         "name": "page",
                         "in": "query"
                     },
                     {
-                        "minimum": 1,
                         "type": "integer",
                         "description": "每页数量",
                         "name": "page_size",
@@ -489,7 +463,7 @@ var doc = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/util.Response"
+                                    "$ref": "#/definitions/static.Response"
                                 },
                                 {
                                     "type": "object",
@@ -505,7 +479,7 @@ var doc = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -523,8 +497,6 @@ var doc = `{
                 ],
                 "parameters": [
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "用户邮箱",
                         "name": "email",
@@ -532,18 +504,13 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "maximum": 2,
-                        "minimum": 1,
                         "type": "integer",
-                        "default": 1,
                         "description": "性别",
                         "name": "gender",
                         "in": "formData",
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "手机号",
                         "name": "mobile",
@@ -551,8 +518,6 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "密码",
                         "name": "password",
@@ -560,8 +525,6 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "真实姓名",
                         "name": "realname",
@@ -573,25 +536,25 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -618,8 +581,6 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "用户邮箱",
                         "name": "email",
@@ -627,18 +588,13 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "maximum": 2,
-                        "minimum": 1,
                         "type": "integer",
-                        "default": 1,
                         "description": "性别",
                         "name": "gender",
                         "in": "formData",
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "手机号",
                         "name": "mobile",
@@ -646,8 +602,6 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "密码",
                         "name": "password",
@@ -655,8 +609,6 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "maxLength": 255,
-                        "minLength": 1,
                         "type": "string",
                         "description": "真实姓名",
                         "name": "realname",
@@ -668,25 +620,25 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -735,25 +687,25 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -784,25 +736,25 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -854,7 +806,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -906,7 +858,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/util.Response"
+                            "$ref": "#/definitions/static.Response"
                         }
                     }
                 }
@@ -965,7 +917,7 @@ var doc = `{
                 }
             }
         },
-        "util.Response": {
+        "static.Response": {
             "type": "object",
             "properties": {
                 "code": {

@@ -33,7 +33,7 @@ definitions:
       realname:
         type: string
     type: object
-  util.Response:
+  static.Response:
     properties:
       code:
         type: integer
@@ -58,12 +58,10 @@ paths:
       parameters:
       - description: 页码
         in: query
-        minimum: 1
         name: page
         type: integer
       - description: 每页数量
         in: query
-        minimum: 1
         name: page_size
         type: integer
       produces:
@@ -73,7 +71,7 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/util.Response'
+            - $ref: '#/definitions/static.Response'
             - properties:
                 data:
                   $ref: '#/definitions/model.Action'
@@ -81,7 +79,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
       tags:
       - 接口管理
     post:
@@ -91,15 +89,11 @@ paths:
       parameters:
       - description: 备注
         in: formData
-        maxLength: 255
-        minLength: 1
         name: remark
         required: true
         type: string
-      - description: 路径
+      - description: uri
         in: formData
-        maxLength: 255
-        minLength: 1
         name: url
         required: true
         type: string
@@ -109,19 +103,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
       tags:
       - 接口管理
   /api/v1/actions/{id}:
@@ -137,15 +131,11 @@ paths:
         type: integer
       - description: 备注
         in: formData
-        maxLength: 255
-        minLength: 1
         name: remark
         required: true
         type: string
-      - description: 路径
+      - description: uri
         in: formData
-        maxLength: 255
-        minLength: 1
         name: url
         required: true
         type: string
@@ -155,19 +145,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
       tags:
       - 接口管理
   /api/v1/clients:
@@ -178,12 +168,10 @@ paths:
       parameters:
       - description: 页码
         in: query
-        minimum: 1
         name: page
         type: integer
       - description: 每页数量
         in: query
-        minimum: 1
         name: page_size
         type: integer
       produces:
@@ -193,7 +181,7 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/util.Response'
+            - $ref: '#/definitions/static.Response'
             - properties:
                 data:
                   $ref: '#/definitions/model.Client'
@@ -201,7 +189,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
       tags:
       - 客户端管理
     post:
@@ -211,22 +199,16 @@ paths:
       parameters:
       - description: 回调地址
         in: formData
-        maxLength: 255
-        minLength: 1
         name: callback
         required: true
         type: string
       - description: 域名
         in: formData
-        maxLength: 255
-        minLength: 1
         name: domain
         required: true
         type: string
       - description: 用来签名校验的密钥
         in: formData
-        maxLength: 255
-        minLength: 1
         name: secret
         required: true
         type: string
@@ -236,19 +218,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
       tags:
       - 客户端管理
   /api/v1/clients/{id}:
@@ -264,22 +246,16 @@ paths:
         type: integer
       - description: 回调地址
         in: formData
-        maxLength: 255
-        minLength: 1
         name: callback
         required: true
         type: string
       - description: 域名
         in: formData
-        maxLength: 255
-        minLength: 1
         name: domain
         required: true
         type: string
       - description: 用来签名校验的密钥
         in: formData
-        maxLength: 255
-        minLength: 1
         name: secret
         required: true
         type: string
@@ -289,19 +265,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
       tags:
       - 客户端管理
   /api/v1/clients/{id}/toggle-status:
@@ -321,19 +297,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
       tags:
       - 客户端管理
   /api/v1/users:
@@ -344,12 +320,10 @@ paths:
       parameters:
       - description: 页码
         in: query
-        minimum: 1
         name: page
         type: integer
       - description: 每页数量
         in: query
-        minimum: 1
         name: page_size
         type: integer
       produces:
@@ -359,7 +333,7 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/util.Response'
+            - $ref: '#/definitions/static.Response'
             - properties:
                 data:
                   $ref: '#/definitions/model.User'
@@ -367,7 +341,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
       tags:
       - 用户管理
     post:
@@ -377,37 +351,26 @@ paths:
       parameters:
       - description: 用户邮箱
         in: formData
-        maxLength: 255
-        minLength: 1
         name: email
         required: true
         type: string
-      - default: 1
-        description: 性别
+      - description: 性别
         in: formData
-        maximum: 2
-        minimum: 1
         name: gender
         required: true
         type: integer
       - description: 手机号
         in: formData
-        maxLength: 255
-        minLength: 1
         name: mobile
         required: true
         type: string
       - description: 密码
         in: formData
-        maxLength: 255
-        minLength: 1
         name: password
         required: true
         type: string
       - description: 真实姓名
         in: formData
-        maxLength: 255
-        minLength: 1
         name: realname
         required: true
         type: string
@@ -417,19 +380,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
       tags:
       - 用户管理
   /api/v1/users/{id}:
@@ -445,37 +408,26 @@ paths:
         type: integer
       - description: 用户邮箱
         in: formData
-        maxLength: 255
-        minLength: 1
         name: email
         required: true
         type: string
-      - default: 1
-        description: 性别
+      - description: 性别
         in: formData
-        maximum: 2
-        minimum: 1
         name: gender
         required: true
         type: integer
       - description: 手机号
         in: formData
-        maxLength: 255
-        minLength: 1
         name: mobile
         required: true
         type: string
       - description: 密码
         in: formData
-        maxLength: 255
-        minLength: 1
         name: password
         required: true
         type: string
       - description: 真实姓名
         in: formData
-        maxLength: 255
-        minLength: 1
         name: realname
         required: true
         type: string
@@ -485,19 +437,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
       tags:
       - 用户管理
   /api/v1/users/{id}/reset-password:
@@ -531,19 +483,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
       tags:
       - 用户管理
   /api/v1/users/{id}/toggle-status:
@@ -563,19 +515,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
       tags:
       - 用户管理
   /svc/session:
@@ -610,7 +562,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
       tags:
       - Svc接口
   /svc/userinfo:
@@ -645,7 +597,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/util.Response'
+            $ref: '#/definitions/static.Response'
       tags:
       - Svc接口
 swagger: "2.0"

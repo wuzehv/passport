@@ -5,15 +5,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/wuzehv/passport/model"
 	"github.com/wuzehv/passport/service/db"
-	"github.com/wuzehv/passport/util"
+	"github.com/wuzehv/passport/util/static"
 	"gorm.io/gorm"
 	"net/http"
 )
 
 type Form struct {
-	Domain   string `form:"domain" valid:"Required" binding:"required" minLength:"1" maxLength:"255"`   // 域名
-	Callback string `form:"callback" valid:"Required" binding:"required" minLength:"1" maxLength:"255"` // 回调地址
-	Secret   string `form:"secret" valid:"Required" binding:"required" minLength:"1" maxLength:"255"`   // 用来签名校验的密钥
+	Domain   string `form:"domain" binding:"required,unix_addr"`     // 域名
+	Callback string `form:"callback" binding:"required,url"`         // 回调地址
+	Secret   string `form:"secret" binding:"required,gte=6,lte=255"` // 用来签名校验的密钥
 }
 
 // @Description 客户端列表
@@ -21,18 +21,18 @@ type Form struct {
 // @Accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param _ query validator.Pager false "_"
-// @Success 200 {object} util.Response{data=model.Client}
-// @Failure 500 {object} util.Response
+// @Success 200 {object} static.Response{data=model.Client}
+// @Failure 500 {object} static.Response
 // @Router /api/v1/clients [GET]
 func Index(c *gin.Context) {
 	var t model.Client
 	res, err := model.PaginateContext(c, &model.Param{Table: &t})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
 		return
 	}
 
-	c.JSON(http.StatusOK, util.Success.Msg(res))
+	c.JSON(http.StatusOK, static.Success.Msg(res))
 }
 
 // @Description 添加客户端
@@ -40,15 +40,15 @@ func Index(c *gin.Context) {
 // @Accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param _ formData Form false "_"
-// @Success 200 {object} util.Response
-// @Failure 400 {object} util.Response
-// @Failure 404 {object} util.Response
-// @Failure 500 {object} util.Response
+// @Success 200 {object} static.Response
+// @Failure 400 {object} static.Response
+// @Failure 404 {object} static.Response
+// @Failure 500 {object} static.Response
 // @Router /api/v1/clients [POST]
 func Add(c *gin.Context) {
 	var data Form
 	if err := c.ShouldBind(&data); err != nil {
-		c.JSON(http.StatusBadRequest, util.ParamsError.Msg(err.Error()))
+		c.JSON(http.StatusBadRequest, static.ParamsError.Msg(err.Error()))
 		return
 	}
 
@@ -59,11 +59,11 @@ func Add(c *gin.Context) {
 		Status:   model.StatusNormal,
 	}
 	if err := db.Db.Save(&d).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
 		return
 	}
 
-	c.JSON(http.StatusOK, util.Success.Msg(nil))
+	c.JSON(http.StatusOK, static.Success.Msg(nil))
 }
 
 // @Description 客户端更新
@@ -72,28 +72,28 @@ func Add(c *gin.Context) {
 // @Produce application/json
 // @Param id path int true "ID"
 // @Param _ formData Form false "_"
-// @Success 200 {object} util.Response
-// @Failure 400 {object} util.Response
-// @Failure 404 {object} util.Response
-// @Failure 500 {object} util.Response
+// @Success 200 {object} static.Response
+// @Failure 400 {object} static.Response
+// @Failure 404 {object} static.Response
+// @Failure 500 {object} static.Response
 // @Router /api/v1/clients/{id} [PUT]
 func Update(c *gin.Context) {
 	id := c.Param("id")
 	var data Form
 	if err := c.ShouldBind(&data); err != nil {
-		c.JSON(http.StatusBadRequest, util.ParamsError.Msg(err.Error()))
+		c.JSON(http.StatusBadRequest, static.ParamsError.Msg(err.Error()))
 		return
 	}
 
 	var d model.Client
 	err := db.Db.First(&d, id).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		c.JSON(http.StatusNotFound, util.ParamsError.Msg(nil))
+		c.JSON(http.StatusNotFound, static.ParamsError.Msg(nil))
 		return
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
 		return
 	}
 
@@ -101,11 +101,11 @@ func Update(c *gin.Context) {
 	d.Callback = data.Callback
 	d.Secret = data.Secret
 	if err := db.Db.Save(&d).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
 		return
 	}
 
-	c.JSON(http.StatusOK, util.Success.Msg(nil))
+	c.JSON(http.StatusOK, static.Success.Msg(nil))
 }
 
 // @Description 客户端启用/禁用
@@ -113,10 +113,10 @@ func Update(c *gin.Context) {
 // @Accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Param id path int true "ID"
-// @Success 200 {object} util.Response
-// @Failure 400 {object} util.Response
-// @Failure 404 {object} util.Response
-// @Failure 500 {object} util.Response
+// @Success 200 {object} static.Response
+// @Failure 400 {object} static.Response
+// @Failure 404 {object} static.Response
+// @Failure 500 {object} static.Response
 // @Router /api/v1/clients/{id}/toggle-status [POST]
 func ToggleStatus(c *gin.Context) {
 	id := c.Param("id")
@@ -125,12 +125,12 @@ func ToggleStatus(c *gin.Context) {
 	m := db.Db.First(&d, id)
 	err := m.Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		c.JSON(http.StatusNotFound, util.ParamsError.Msg(nil))
+		c.JSON(http.StatusNotFound, static.ParamsError.Msg(nil))
 		return
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
 		return
 	}
 
@@ -140,9 +140,9 @@ func ToggleStatus(c *gin.Context) {
 	}
 
 	if err := m.Update("status", status).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, util.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
 		return
 	}
 
-	c.JSON(http.StatusOK, util.Success.Msg(nil))
+	c.JSON(http.StatusOK, static.Success.Msg(nil))
 }

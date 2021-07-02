@@ -7,7 +7,7 @@ import (
 	"github.com/wuzehv/passport/model"
 	"github.com/wuzehv/passport/service/db"
 	"github.com/wuzehv/passport/service/rdb"
-	"github.com/wuzehv/passport/util"
+	"github.com/wuzehv/passport/util/static"
 	"net/http"
 	"time"
 )
@@ -16,16 +16,16 @@ import (
 // @Tags Svc接口
 // @Accept application/x-www-form-urlencoded
 // @Produce application/json
-// @Param _ formData util.SvcRequest false "_"
-// @Success 200 {object} util.Response
-// @Failure 200 {object} util.Response
+// @Param _ formData static.SvcRequest false "_"
+// @Success 200 {object} static.Response
+// @Failure 200 {object} static.Response
 // @Router /svc/session [POST]
 func Session(c *gin.Context) {
-	tmp, _ := c.Get(util.Session)
+	tmp, _ := c.Get(static.Session)
 	s := tmp.(*model.Session)
 
 	if s.Status != model.StatusInit {
-		c.AbortWithStatusJSON(http.StatusOK, util.SystemError.Msg(nil))
+		c.AbortWithStatusJSON(http.StatusOK, static.SystemError.Msg(nil))
 		return
 	}
 
@@ -33,31 +33,31 @@ func Session(c *gin.Context) {
 	s.Status = model.StatusLogin
 	db.Db.Save(&s)
 
-	c.JSON(http.StatusOK, util.Success.Msg(nil))
+	c.JSON(http.StatusOK, static.Success.Msg(nil))
 }
 
 // @Description 客户端业务代码执行之前，调用该接口获取用户信息
 // @Tags Svc接口
 // @Accept application/x-www-form-urlencoded
 // @Produce application/json
-// @Param _ formData util.SvcRequest false "_"
-// @Success 200 {object} util.Response{data=model.User}
-// @Failure 200 {object} util.Response
+// @Param _ formData static.SvcRequest false "_"
+// @Success 200 {object} static.Response{data=model.User}
+// @Failure 200 {object} static.Response
 // @Router /svc/userinfo [POST]
 func Userinfo(c *gin.Context) {
-	tmp, _ := c.Get(util.Session)
+	tmp, _ := c.Get(static.Session)
 	s := tmp.(*model.Session)
 
 	// 登录状态
 	if s.Status != model.StatusLogin {
-		c.AbortWithStatusJSON(http.StatusOK, util.SessionStatusNotLogin.Msg(nil))
+		c.AbortWithStatusJSON(http.StatusOK, static.SessionStatusNotLogin.Msg(nil))
 		return
 	}
 
-	tmp, _ = c.Get(util.User)
+	tmp, _ = c.Get(static.User)
 	u := tmp.(*model.User)
 
 	rdb.SetJson(s.Token, u, time.Minute)
 
-	c.JSON(http.StatusOK, util.Success.Msg(u))
+	c.JSON(http.StatusOK, static.Success.Msg(u))
 }

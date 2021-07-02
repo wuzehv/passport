@@ -1,4 +1,4 @@
-package util
+package static
 
 type Code int
 
@@ -55,10 +55,10 @@ const (
 )
 
 type SvcRequest struct {
-	Token     string `form:"token" valid:"Required" binding:"required"`     // 登录token
-	Domain    string `form:"domain" valid:"Required" binding:"required"`    // 客户端域名
-	Timestamp string `form:"timestamp" valid:"Required" binding:"required"` // 时间戳
-	Sign      string `form:"sign" valid:"Required" binding:"required"`      // 签名
+	Token     string `form:"token" binding:"required"`            // 登录token
+	Domain    string `form:"domain" binding:"required,unix_addr"` // 客户端域名
+	Timestamp string `form:"timestamp" binding:"required"`        // 时间戳
+	Sign      string `form:"sign" binding:"required"`             // 签名
 }
 
 // 响应结构体

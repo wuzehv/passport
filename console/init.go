@@ -4,7 +4,7 @@ package main
 import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/wuzehv/passport/model"
-	"github.com/wuzehv/passport/util"
+	"github.com/wuzehv/passport/util/common"
 	"github.com/wuzehv/passport/util/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -93,7 +93,7 @@ func main() {
 
 	u = "admin@gmail.com"
 	up := "admin"
-	p := util.GenPassword(up)
+	p := common.GenPassword(up)
 	db.Create(&model.User{Email: u, Password: p, Status: model.StatusNormal, Realname: "admin", Gender: model.GenderMale, Mobile: "123123123"})
 	log.Printf("initialize user: %s, password: %s\n", u, up)
 }
