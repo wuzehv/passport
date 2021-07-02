@@ -3,7 +3,7 @@
 ## 主要依赖
 * [gin](https://github.com/gin-gonic/gin)
 * [gorm](https://gorm.io/zh_CN/)
-* [go-redis](https://redis.uptrace.dev/)
+* [redisgo](https://github.com/gomodule/redigo)
 * [gin-swagger](https://github.com/swaggo/gin-swagger)
 
 ## 开发规范
