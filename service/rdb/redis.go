@@ -2,13 +2,9 @@ package rdb
 
 import (
 	"encoding/json"
-	//"context"
-	//"encoding/json"
 	"github.com/gomodule/redigo/redis"
 	"github.com/wuzehv/passport/util/config"
 	"log"
-
-	//"log"
 	"time"
 )
 
