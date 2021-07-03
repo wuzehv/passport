@@ -15,6 +15,11 @@ import (
 	"time"
 )
 
+type Form struct {
+	Username string `form:"username" binding:"required,email"`         // 用户邮箱
+	Password string `form:"password" binding:"required,gte=6,lte=255"` // 密码
+}
+
 func Index(c *gin.Context) {
 	tmp, _ := c.Get(static.Client)
 	cl := tmp.(*model.Client)
@@ -34,17 +39,31 @@ func Index(c *gin.Context) {
 	commonDeal(c, cl, uint(uid), jump)
 }
 
+// @Description 登录
+// @Tags Sso入口
+// @Accept application/x-www-form-urlencoded
+// @Produce application/json
+// @Param domain query string false "客户端标识"
+// @Param _ formData Form false "_"
+// @Success 200 {object} static.Response
+// @Failure 400 {object} static.Response
+// @Failure 403 {object} static.Response
+// @Failure 500 {object} static.Response
+// @Router /sso/login [POST]
 func Login(c *gin.Context) {
 	jump := c.GetString(static.Jump)
 
-	name := c.PostForm("username")
-	passwd := c.PostForm("password")
+	var data Form
+	if err := c.ShouldBind(&data); err != nil {
+		c.JSON(http.StatusBadRequest, static.ParamsError.Msg(err.Error()))
+		return
+	}
 
 	// 校验密码
 	var u model.User
-	err := u.GetByEmail(name)
+	err := u.GetByEmail(data.Username)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusOK, static.SystemError.Msg(nil))
+		c.AbortWithStatusJSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
 		return
 	}
 
@@ -62,14 +81,14 @@ func Login(c *gin.Context) {
 	if model.FailNumOut() {
 		r.Type = model.TypeOther
 		db.Db.Save(&r)
-		c.AbortWithStatusJSON(http.StatusOK, static.UsernamePasswdFailNumOut.Msg(nil))
+		c.AbortWithStatusJSON(http.StatusForbidden, static.UsernamePasswdFailNumOut.Msg(nil))
 		return
 	}
 
-	if !common.VerifyPassword(u.Password, passwd) {
+	if !common.VerifyPassword(u.Password, data.Password) {
 		r.Type = model.TypeFail
 		db.Db.Save(&r)
-		c.AbortWithStatusJSON(http.StatusOK, static.UsernamePasswdNotMatch.Msg(nil))
+		c.AbortWithStatusJSON(http.StatusForbidden, static.UsernamePasswdNotMatch.Msg(nil))
 		return
 	}
 
@@ -85,7 +104,7 @@ func Login(c *gin.Context) {
 	// 重置所有客户端session状态
 	err = model.LogoutAll(u.Id)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusOK, static.SystemError.Msg(nil))
+		c.AbortWithStatusJSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
 		return
 	}
 
@@ -116,6 +135,8 @@ func commonDeal(c *gin.Context, cl *model.Client, userId uint, jump string) {
 	} else {
 		// 如果不是sso，跳转到首页
 		c.Redirect(http.StatusMovedPermanently, "/api/v1/index")
+		// todo 直接返回json
+		//c.JSON(http.StatusOK, static.Success.Msg(token))
 	}
 }
 

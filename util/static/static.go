@@ -1,5 +1,7 @@
 package static
 
+import "github.com/wuzehv/passport/util/journal"
+
 type Code int
 
 // 状态码
@@ -69,6 +71,10 @@ type Response struct {
 }
 
 func (c Code) Msg(data interface{}) Response {
+	if c != Success {
+		journal.Error(data)
+	}
+
 	return Response{
 		Code:    c,
 		Message: errors[c],

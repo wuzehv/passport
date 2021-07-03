@@ -3,6 +3,7 @@ package jwt
 import (
 	"errors"
 	"github.com/golang-jwt/jwt"
+	"time"
 )
 
 type Claims struct {
@@ -10,20 +11,26 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-func GenToken(data interface{}, secret []byte) (string, error) {
+const ExpireTime = 24 * time.Hour
+const Issuer = "passport"
+
+func GenToken(data interface{}, secret string) (string, error) {
 	v := Claims{
 		data,
-		jwt.StandardClaims{},
+		jwt.StandardClaims{
+			Issuer:    Issuer,
+			ExpiresAt: time.Now().Unix() + int64(ExpireTime),
+		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, v)
-	return token.SignedString(secret)
+	return token.SignedString([]byte(secret))
 }
 
-func ParseToken(tokenString string, secret []byte) (*Claims, error) {
+func ParseToken(tokenString string, secret string) (*Claims, error) {
 	v := new(Claims)
 	token, err := jwt.ParseWithClaims(tokenString, v, func(token *jwt.Token) (interface{}, error) {
-		return secret, nil
+		return []byte(secret), nil
 	})
 
 	if err != nil {
@@ -31,6 +38,10 @@ func ParseToken(tokenString string, secret []byte) (*Claims, error) {
 	}
 
 	if res, ok := token.Claims.(*Claims); ok {
+		if err = res.Valid(); err != nil {
+			return nil, err
+		}
+
 		return res, nil
 	}
 

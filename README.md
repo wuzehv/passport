@@ -48,7 +48,7 @@ client.two.com:8082/index
 **默认登录信息：**
 ```
 email: admin@gmail.com
-password: admin
+password: 123456
 ```
 
 5. 直接登录sso中心
@@ -70,8 +70,10 @@ sso.com:8099
   - [ ] 菜单管理
   - [ ] 权限管理
   - [X] validator详细使用
-- [ ] 业务日志处理
+- [X] 业务日志打印
+- [ ] 日志切割
 - [ ] 考虑jwt使用
+- [ ] 日志trace id
 - [X] sso中心后台
 - [X] swagger(http://sso.com:8099/swagger/index.html#/)
 

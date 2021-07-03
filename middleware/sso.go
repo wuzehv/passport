@@ -15,12 +15,12 @@ func Sso() gin.HandlerFunc {
 		var cl model.Client
 		err := cl.GetByDomain(domain)
 		if err != nil {
-			c.AbortWithError(http.StatusInternalServerError, static.SystemError)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
 			return
 		}
 
 		if cl.Id > 0 && cl.Status != model.StatusNormal {
-			c.AbortWithError(http.StatusForbidden, static.ClientDisabled)
+			c.AbortWithStatusJSON(http.StatusForbidden, static.ClientDisabled.Msg(nil))
 			return
 		}
 
@@ -37,7 +37,7 @@ func Sso() gin.HandlerFunc {
 
 		uid, err := strconv.Atoi(token[32:])
 		if err != nil {
-			c.AbortWithError(http.StatusInternalServerError, static.TokenParseError)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, static.TokenParseError.Msg(nil))
 			return
 		}
 

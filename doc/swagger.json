@@ -512,7 +512,7 @@
                     {
                         "type": "string",
                         "description": "真实姓名",
-                        "name": "realname",
+                        "name": "realName",
                         "in": "formData",
                         "required": true
                     }
@@ -596,7 +596,7 @@
                     {
                         "type": "string",
                         "description": "真实姓名",
-                        "name": "realname",
+                        "name": "realName",
                         "in": "formData",
                         "required": true
                     }
@@ -732,6 +732,68 @@
                     },
                     "404": {
                         "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/static.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/static.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/sso/login": {
+            "post": {
+                "description": "登录",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Sso入口"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "客户端标识",
+                        "name": "domain",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "密码",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "用户邮箱",
+                        "name": "username",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/static.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/static.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/definitions/static.Response"
                         }

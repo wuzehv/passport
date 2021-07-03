@@ -12,11 +12,11 @@ import (
 )
 
 type Form struct {
-	Email    string `form:"email" binding:"required,email"`                            // 用户邮箱
-	RealName string `form:"realname" json:"realname" binding:"required,gte=1,lte=255"` // 真实姓名
-	Gender   int    `form:"gender" binding:"required,max=2,min=1"`                     // 性别
-	Mobile   string `form:"mobile" binding:"required,gte=6,lte=255,alphanum"`          // 手机号
-	Password string `form:"password" binding:"required,gte=6,lte=255"`                 // 密码
+	Email    string `form:"email" binding:"required,email"`                   // 用户邮箱
+	RealName string `form:"realname" binding:"required,gte=1,lte=255"`        // 真实姓名
+	Gender   int    `form:"gender" binding:"required,max=2,min=1"`            // 性别
+	Mobile   string `form:"mobile" binding:"required,gte=6,lte=255,alphanum"` // 手机号
+	Password string `form:"password" binding:"required,gte=6,lte=255"`        // 密码
 }
 
 // @Description 用户列表
