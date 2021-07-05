@@ -11,10 +11,11 @@ import (
 )
 
 type logger struct {
-	Time  time.Time   `json:"time"`
-	Type  string      `json:"type"`
-	Data  interface{} `json:"data"`
-	Stack interface{} `json:"stack"`
+	Time    time.Time   `json:"time"`
+	Type    string      `json:"type"`
+	Keyword string      `json:"keyword"`
+	Data    interface{} `json:"data"`
+	Stack   interface{} `json:"stack"`
 }
 
 const (
@@ -23,11 +24,12 @@ const (
 	TypeDebug = "debug"
 )
 
-func New(lt string, data interface{}) *logger {
+func New(logType, keyword string, data interface{}) *logger {
 	return &logger{
-		Time: time.Now(),
-		Type: lt,
-		Data: data,
+		Time:    time.Now(),
+		Type:    logType,
+		Keyword: keyword,
+		Data:    data,
 	}
 }
 
@@ -42,14 +44,14 @@ func (l *logger) log() {
 	}
 }
 
-func Info(data interface{}) {
-	New(TypeInfo, data).log()
+func Info(keyword string, data interface{}) {
+	New(TypeInfo, keyword, data).log()
 }
 
-func Error(data interface{}) {
-	New(TypeError, data).log()
+func Error(keyword string, data interface{}) {
+	New(TypeError, keyword, data).log()
 }
 
-func Debug(data interface{}) {
-	New(TypeDebug, data).log()
+func Debug(keyword string, data interface{}) {
+	New(TypeDebug, keyword, data).log()
 }

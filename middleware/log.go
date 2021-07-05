@@ -12,17 +12,17 @@ import (
 )
 
 type LogFormat struct {
-	ClientIp   string
-	Timestamp  string
-	Method     string
-	Path       string
-	Code       int
-	UserAgent  string
-	Message    string
-	BodySize   int
-	Form       interface{}
-	Host       string
-	RemoteAddr string
+	ClientIp   string      `json:"client_ip"`
+	Timestamp  string      `json:"timestamp"`
+	Method     string      `json:"method"`
+	Path       string      `json:"path"`
+	Code       int         `json:"code"`
+	UserAgent  string      `json:"user_agent"`
+	Message    string      `json:"message"`
+	BodySize   int         `json:"body_size"`
+	Form       interface{} `json:"form"`
+	Host       string      `json:"host"`
+	RemoteAddr string      `json:"remote_addr"`
 }
 
 func init() {

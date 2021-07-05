@@ -8,7 +8,7 @@ import (
 
 type Access struct {
 	LogFormat
-	time.Duration
+	Duration string `json:"duration"`
 }
 
 // Base 统计执行时间
@@ -20,9 +20,9 @@ func Base() gin.HandlerFunc {
 			LogFormat{
 				Path: c.Request.URL.Path,
 			},
-			time.Now().Sub(s),
+			time.Now().Sub(s).String(),
 		}
 
-		journal.Info(l)
+		journal.Info("duration", l)
 	}
 }

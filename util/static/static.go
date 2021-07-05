@@ -72,7 +72,7 @@ type Response struct {
 
 func (c Code) Msg(data interface{}) Response {
 	if c != Success {
-		journal.Error(data)
+		journal.Error("response", data)
 	}
 
 	return Response{
