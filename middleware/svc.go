@@ -3,13 +3,11 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/wuzehv/passport/model"
-	"github.com/wuzehv/passport/service/db"
 	"github.com/wuzehv/passport/service/rdb"
 	"github.com/wuzehv/passport/util/common"
 	"github.com/wuzehv/passport/util/static"
 	"net/http"
 	"net/url"
-	"time"
 )
 
 // Svc svc调用入口，校验token
@@ -27,13 +25,16 @@ func Svc() gin.HandlerFunc {
 			return
 		}
 
-		domain := res.Domain
-		domain, _ = url.QueryUnescape(domain)
+		domain, err := url.QueryUnescape(res.Domain)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusOK, static.SystemError.Msg(err))
+			return
+		}
 
 		var cl model.Client
-		err := cl.GetByDomain(domain)
+		err = cl.GetByDomain(domain)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusOK, static.SystemError.Msg(nil))
+			c.AbortWithStatusJSON(http.StatusOK, static.SystemError.Msg(err))
 			return
 		}
 
@@ -51,40 +52,6 @@ func Svc() gin.HandlerFunc {
 			return
 		}
 
-		t := res.Token
-
-		var s model.Session
-		err = s.GetByToken(t)
-		if err != nil {
-			c.AbortWithStatusJSON(http.StatusOK, static.SystemError.Msg(nil))
-			return
-		}
-
-		if s.Id == 0 {
-			c.AbortWithStatusJSON(http.StatusOK, static.TokenNotExists.Msg(nil))
-			return
-		}
-
-		db.Db.First(&u, s.UserId)
-
-		if u.Id == 0 || u.Status != model.StatusNormal {
-			c.AbortWithStatusJSON(http.StatusOK, static.UserDisabled.Msg(nil))
-			return
-		}
-
-		// 客户端和session不匹配
-		if cl.Id != s.ClientId {
-			c.AbortWithStatusJSON(http.StatusOK, static.SystemError.Msg(nil))
-			return
-		}
-
-		// 过期检测
-		if time.Now().After(s.ExpireTime) {
-			c.AbortWithStatusJSON(http.StatusOK, static.SessionExpired.Msg(nil))
-			return
-		}
-
-		c.Set(static.Session, &s)
-		c.Set(static.User, &u)
+		c.Set(static.Token, res.Token)
 	}
 }

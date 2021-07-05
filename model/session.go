@@ -26,21 +26,25 @@ const (
 	StatusLogout
 )
 
-const ExpireTime = 24 * time.Hour
+const ExpireTime = -24 * time.Hour
 
 func (s *Session) Base() {}
 
-func NewSession(userId, clientId uint) Session {
+func NewSession(userId, clientId uint) (string, error) {
 	s := Session{
 		Token:      common.GenToken(),
 		UserId:     userId,
 		ClientId:   clientId,
-		Status:     StatusInit,
+		Status:     StatusLogin,
 		ExpireTime: time.Now().Add(ExpireTime),
 	}
-	db.Db.Create(&s)
 
-	return s
+	err := db.Db.Create(&s).Error
+	if err != nil {
+		return "", nil
+	}
+
+	return s.Token, err
 }
 
 func (s *Session) GetByToken(t string) error {

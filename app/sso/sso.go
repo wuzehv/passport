@@ -9,6 +9,7 @@ import (
 	"github.com/wuzehv/passport/util/common"
 	"github.com/wuzehv/passport/util/config"
 	"github.com/wuzehv/passport/util/static"
+	"github.com/wuzehv/passport/util/svc"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -63,7 +64,7 @@ func Login(c *gin.Context) {
 	var u model.User
 	err := u.GetByEmail(data.Username)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -81,14 +82,14 @@ func Login(c *gin.Context) {
 	if model.FailNumOut() {
 		r.Type = model.TypeOther
 		db.Db.Save(&r)
-		c.AbortWithStatusJSON(http.StatusForbidden, static.UsernamePasswdFailNumOut.Msg(nil))
+		c.JSON(http.StatusForbidden, static.UsernamePasswdFailNumOut.Msg(nil))
 		return
 	}
 
 	if !common.VerifyPassword(u.Password, data.Password) {
 		r.Type = model.TypeFail
 		db.Db.Save(&r)
-		c.AbortWithStatusJSON(http.StatusForbidden, static.UsernamePasswdNotMatch.Msg(nil))
+		c.JSON(http.StatusForbidden, static.UsernamePasswdNotMatch.Msg(nil))
 		return
 	}
 
@@ -104,7 +105,7 @@ func Login(c *gin.Context) {
 	// 重置所有客户端session状态
 	err = model.LogoutAll(u.Id)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -118,10 +119,15 @@ func commonDeal(c *gin.Context, cl *model.Client, userId uint, jump string) {
 	callbackUrl, _ := url.Parse(cl.Callback)
 
 	// 持久化
-	s := model.NewSession(userId, cl.Id)
+	adp := svc.New(config.Svc.Adapter)
+	token, err := adp.GenToken(userId, cl.Id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		return
+	}
 
 	callbackParams := url.Values{}
-	callbackParams.Add(static.Token, s.Token)
+	callbackParams.Add(static.Token, token)
 	callbackParams.Add(static.Jump, jump)
 
 	callbackUrl.RawQuery = callbackParams.Encode()

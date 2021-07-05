@@ -46,12 +46,17 @@ type log struct {
 	Dir string
 }
 
+type svc struct {
+	Adapter string
+}
+
 var (
 	config *ini.File
 	App    = &app{}
 	Db     = &db{}
 	Redis  = &redis{}
 	Log    = &log{}
+	Svc    = &svc{}
 )
 
 // ini文件加载优先级
@@ -72,6 +77,7 @@ func init() {
 	mapTo("db", Db)
 	mapTo("redis", Redis)
 	mapTo("log", Log)
+	mapTo("svc", Svc)
 }
 
 func getConfigFile() string {
