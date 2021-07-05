@@ -15,7 +15,7 @@ func Sso() gin.HandlerFunc {
 		var cl model.Client
 		err := cl.GetByDomain(domain)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+			c.AbortWithStatusJSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 			return
 		}
 

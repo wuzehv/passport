@@ -14,6 +14,7 @@ const (
 	TokenNotExists
 	TokenParseError
 	SessionExpired
+	SessionNotExists
 	SessionStatusNotLogin
 	ClientNotExists
 	ClientDisabled
@@ -32,6 +33,7 @@ var errors = [...]string{
 	TokenNotExists:           "token not exists",
 	TokenParseError:          "token parse exists",
 	SessionExpired:           "session expired",
+	SessionNotExists:         "session not exists",
 	SessionStatusNotLogin:    "session status not login",
 	ClientNotExists:          "client not exists",
 	ClientDisabled:           "client disabled",
@@ -73,6 +75,11 @@ type Response struct {
 func (c Code) Msg(data interface{}) Response {
 	if c != Success {
 		journal.Error("response", data)
+
+		// 系统错误屏蔽前端输出
+		if c == SystemError {
+			data = nil
+		}
 	}
 
 	return Response{

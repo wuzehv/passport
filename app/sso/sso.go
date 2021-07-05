@@ -63,7 +63,7 @@ func Login(c *gin.Context) {
 	var u model.User
 	err := u.GetByEmail(data.Username)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.AbortWithStatusJSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -104,7 +104,7 @@ func Login(c *gin.Context) {
 	// 重置所有客户端session状态
 	err = model.LogoutAll(u.Id)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.AbortWithStatusJSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 

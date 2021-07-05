@@ -27,7 +27,7 @@ func GenToken(data interface{}, secret string) (string, error) {
 	return token.SignedString([]byte(secret))
 }
 
-func ParseToken(tokenString string, secret string) (*Claims, error) {
+func ValidToken(tokenString string, secret string) (*Claims, error) {
 	v := new(Claims)
 	token, err := jwt.ParseWithClaims(tokenString, v, func(token *jwt.Token) (interface{}, error) {
 		return []byte(secret), nil
@@ -45,5 +45,5 @@ func ParseToken(tokenString string, secret string) (*Claims, error) {
 		return res, nil
 	}
 
-	return nil, errors.New("jwt token解析错误")
+	return nil, errors.New("jwt token valid error")
 }

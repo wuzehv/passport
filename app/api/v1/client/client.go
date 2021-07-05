@@ -28,7 +28,7 @@ func Index(c *gin.Context) {
 	var t model.Client
 	res, err := model.PaginateContext(c, &model.Param{Table: &t})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -59,7 +59,7 @@ func Add(c *gin.Context) {
 		Status:   model.StatusNormal,
 	}
 	if err := db.Db.Save(&d).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -93,7 +93,7 @@ func Update(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -101,7 +101,7 @@ func Update(c *gin.Context) {
 	d.Callback = data.Callback
 	d.Secret = data.Secret
 	if err := db.Db.Save(&d).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -130,7 +130,7 @@ func ToggleStatus(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -140,7 +140,7 @@ func ToggleStatus(c *gin.Context) {
 	}
 
 	if err := m.Update("status", status).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 

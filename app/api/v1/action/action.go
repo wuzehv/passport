@@ -27,7 +27,7 @@ func Index(c *gin.Context) {
 	var t model.Action
 	res, err := model.PaginateContext(c, &model.Param{Table: &t})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -54,7 +54,7 @@ func Add(c *gin.Context) {
 	var d model.Action
 	d.Url, d.Remark = data.Url, data.Remark
 	if err := db.Db.Save(&d).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -88,13 +88,13 @@ func Update(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
 	d.Url, d.Remark = data.Url, data.Remark
 	if err := db.Db.Save(&d).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 

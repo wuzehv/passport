@@ -31,7 +31,7 @@ func Index(c *gin.Context) {
 	var t model.User
 	res, err := model.PaginateContext(c, &model.Param{Table: &t})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -64,7 +64,7 @@ func Add(c *gin.Context) {
 		Status:   model.StatusNormal,
 	}
 	if err := db.Db.Save(&d).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -98,7 +98,7 @@ func Update(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -109,7 +109,7 @@ func Update(c *gin.Context) {
 	d.Password = common.GenPassword(data.Password)
 
 	if err := db.Db.Save(&d).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -138,7 +138,7 @@ func ToggleStatus(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -148,7 +148,7 @@ func ToggleStatus(c *gin.Context) {
 	}
 
 	if err := m.Update("status", status).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -183,7 +183,7 @@ func ResetPassword(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
@@ -199,7 +199,7 @@ func ResetPassword(c *gin.Context) {
 	}
 
 	if err := m.Update("password", common.GenPassword(data.Password)).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(nil))
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 

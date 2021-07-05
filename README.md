@@ -73,6 +73,7 @@ sso.com:8099
 - [X] 业务日志打印
 - [ ] 日志切割
 - [ ] 考虑jwt使用
+- [ ] 考虑加入验证码
 - [ ] 日志trace id
 - [X] sso中心后台
 - [X] swagger(http://sso.com:8099/swagger/index.html#/)
