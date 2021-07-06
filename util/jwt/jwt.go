@@ -11,15 +11,14 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-const ExpireTime = 24 * time.Hour
 const Issuer = "passport"
 
-func GenToken(data interface{}, secret string) (string, error) {
+func GenToken(data interface{}, secret string, exp time.Duration) (string, error) {
 	v := Claims{
 		data,
 		jwt.StandardClaims{
 			Issuer:    Issuer,
-			ExpiresAt: time.Now().Unix() + int64(ExpireTime),
+			ExpiresAt: time.Now().Unix() + int64(exp),
 		},
 	}
 

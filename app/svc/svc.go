@@ -20,17 +20,12 @@ import (
 // @Failure 200 {object} static.Response
 // @Router /svc/session [POST]
 func Session(c *gin.Context) {
-	//tmp, _ := c.Get(static.Session)
-	//s := tmp.(*model.Session)
-	//
-	//if s.Status != model.StatusInit {
-	//	c.AbortWithStatusJSON(http.StatusOK, static.SystemError.Msg(nil))
-	//	return
-	//}
-
-	// 更新session状态
-	//s.Status = model.StatusLogin
-	//db.Db.Save(&s)
+	token := c.GetString(static.Token)
+	adp := svc.New(config.Svc.Adapter)
+	if err := adp.ConfirmToken(token); err != nil {
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		return
+	}
 
 	c.JSON(http.StatusOK, static.Success.Msg(nil))
 }

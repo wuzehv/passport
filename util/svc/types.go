@@ -7,6 +7,7 @@ import (
 
 type Adapter interface {
 	GenToken(userId, clientId uint) (string, error)
+	ConfirmToken(token string) error
 	ValidToken(token string, user *model.User) error
 }
 

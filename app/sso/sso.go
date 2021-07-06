@@ -96,7 +96,7 @@ func Login(c *gin.Context) {
 	// 初始化token
 	token := common.GenToken() + strconv.FormatUint(uint64(u.Id), 10)
 	u.Token = token
-	exp, _ := time.Parse("2006-01-02 15:04:05", time.Now().Add(model.ExpireTime).Format("2006-01-02")+" 04:00:00")
+	exp, _ := time.Parse("2006-01-02 15:04:05", time.Now().Add(config.Svc.ExpireTime).Format("2006-01-02")+" 04:00:00")
 	u.ExpireTime = exp
 	db.Db.Save(&u)
 	// 设置会话为浏览器关闭即失效

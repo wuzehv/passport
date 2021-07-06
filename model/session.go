@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/wuzehv/passport/service/db"
 	"github.com/wuzehv/passport/util/common"
+	"github.com/wuzehv/passport/util/config"
 	"gorm.io/gorm"
 	"time"
 )
@@ -26,8 +27,6 @@ const (
 	StatusLogout
 )
 
-const ExpireTime = -24 * time.Hour
-
 func (s *Session) Base() {}
 
 func NewSession(userId, clientId uint) (string, error) {
@@ -35,8 +34,8 @@ func NewSession(userId, clientId uint) (string, error) {
 		Token:      common.GenToken(),
 		UserId:     userId,
 		ClientId:   clientId,
-		Status:     StatusLogin,
-		ExpireTime: time.Now().Add(ExpireTime),
+		Status:     StatusInit,
+		ExpireTime: time.Now().Add(config.Svc.ExpireTime),
 	}
 
 	err := db.Db.Create(&s).Error

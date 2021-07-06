@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/wuzehv/passport/model"
 	"github.com/wuzehv/passport/service/db"
+	"github.com/wuzehv/passport/util/journal"
 	"github.com/wuzehv/passport/util/static"
 	"gorm.io/gorm"
 	"time"
@@ -15,6 +16,27 @@ type mysql struct {
 
 func (j *mysql) GenToken(userId, clientId uint) (string, error) {
 	return model.NewSession(userId, clientId)
+}
+
+func (j *mysql) ConfirmToken(token string) error {
+	var s model.Session
+
+	if err := s.GetByToken(token); err != nil {
+		return err
+	}
+
+	if s.Status != model.StatusInit {
+		journal.Error("confirm_token", "session状态不合法")
+		return static.SystemError
+	}
+
+	// 更新session状态
+	s.Status = model.StatusLogin
+	if err := db.Db.Save(&s).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (j *mysql) ValidToken(token string, user *model.User) error {

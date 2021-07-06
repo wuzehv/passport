@@ -47,7 +47,8 @@ type log struct {
 }
 
 type svc struct {
-	Adapter string
+	Adapter    string
+	ExpireTime time.Duration
 }
 
 var (

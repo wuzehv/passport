@@ -40,7 +40,7 @@ func (l *logger) String() string {
 
 func (l *logger) log() {
 	if _, err := fmt.Fprintf(gin.DefaultWriter, "%s\n", l); err != nil {
-		log.Fatalf("journal error: %v\n", err)
+		log.Printf("journal error: %v\n", err)
 	}
 }
 
