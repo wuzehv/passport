@@ -39,21 +39,19 @@
 ./run.sh client -addr=127.0.0.1:8082
 ```
 
-4. 浏览器访问
+5. 浏览器访问
 ```
 client.one.com:8081/index
 client.two.com:8082/index
+
+# sso中心
+sso.com:8099
 ```
 
 **默认登录信息：**
 ```
 email: admin@gmail.com
 password: 123456
-```
-
-5. 直接登录sso中心
-```
-sso.com:8099
 ```
 
 ## TODO
@@ -75,7 +73,7 @@ sso.com:8099
   - [X] validator详细使用
   - [ ] 菜单管理
   - [ ] 权限管理
-  
+ 
 - [ ] 日志
   - [X] 业务日志公共方法
   - [ ] 日志trace id
