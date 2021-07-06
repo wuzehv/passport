@@ -5,6 +5,7 @@ package svc
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/wuzehv/passport/model"
+	"github.com/wuzehv/passport/service/rdb"
 	"github.com/wuzehv/passport/util/config"
 	"github.com/wuzehv/passport/util/static"
 	"github.com/wuzehv/passport/util/svc"
@@ -22,7 +23,7 @@ import (
 func Session(c *gin.Context) {
 	token := c.GetString(static.Token)
 	adp := svc.New(config.Svc.Adapter)
-	if err := adp.ConfirmToken(token); err != nil {
+	if err := adp.Confirm(token); err != nil {
 		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
@@ -43,8 +44,13 @@ func Userinfo(c *gin.Context) {
 	token := c.GetString(static.Token)
 
 	adp := svc.New(config.Svc.Adapter)
-	err := adp.ValidToken(token, u)
+	err := adp.Valid(token, u)
 	if err == nil {
+		if _, err = rdb.SetJson(token, u, 5); err != nil {
+			c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+			return
+		}
+
 		c.JSON(http.StatusOK, static.Success.Msg(u))
 		return
 	}

@@ -6,9 +6,10 @@ import (
 )
 
 type Adapter interface {
-	GenToken(userId, clientId uint) (string, error)
-	ConfirmToken(token string) error
-	ValidToken(token string, user *model.User) error
+	Generate(userId, clientId uint) (string, error)
+	Confirm(token string) error
+	Valid(token string, user *model.User) error
+	Destroy(userId uint) error
 }
 
 type data struct {

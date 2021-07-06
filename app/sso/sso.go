@@ -120,7 +120,7 @@ func commonDeal(c *gin.Context, cl *model.Client, userId uint, jump string) {
 
 	// 持久化
 	adp := svc.New(config.Svc.Adapter)
-	token, err := adp.GenToken(userId, cl.Id)
+	token, err := adp.Generate(userId, cl.Id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
@@ -148,7 +148,12 @@ func commonDeal(c *gin.Context, cl *model.Client, userId uint, jump string) {
 
 func Logout(c *gin.Context) {
 	uid := c.GetInt(static.Uid)
-	model.LogoutAll(uint(uid))
+
+	adp := svc.New(config.Svc.Adapter)
+	if err := adp.Destroy(uint(uid)); err != nil {
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		return
+	}
 
 	c.SetCookie(static.CookieFlag, "false", -1, "/", "", !config.IsDev(), true)
 	c.HTML(http.StatusOK, "sso/logout", gin.H{})

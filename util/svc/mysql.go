@@ -14,11 +14,11 @@ type mysql struct {
 	data
 }
 
-func (j *mysql) GenToken(userId, clientId uint) (string, error) {
+func (j *mysql) Generate(userId, clientId uint) (string, error) {
 	return model.NewSession(userId, clientId)
 }
 
-func (j *mysql) ConfirmToken(token string) error {
+func (j *mysql) Confirm(token string) error {
 	var s model.Session
 
 	if err := s.GetByToken(token); err != nil {
@@ -39,7 +39,7 @@ func (j *mysql) ConfirmToken(token string) error {
 	return nil
 }
 
-func (j *mysql) ValidToken(token string, user *model.User) error {
+func (j *mysql) Valid(token string, user *model.User) error {
 	var s model.Session
 	err := s.GetByToken(token)
 	if err != nil {
@@ -48,6 +48,15 @@ func (j *mysql) ValidToken(token string, user *model.User) error {
 
 	if s.Id == 0 {
 		return static.SessionNotExists
+	}
+
+	if s.Status != model.StatusLogin {
+		return static.SessionExpired
+	}
+
+	// 过期检测
+	if time.Now().After(s.ExpireTime) {
+		return static.SessionExpired
 	}
 
 	if err = db.Db.First(user, s.UserId).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -63,10 +72,9 @@ func (j *mysql) ValidToken(token string, user *model.User) error {
 	//	c.AbortWithStatusJSON(http.StatusOK, static.SystemError.Msg("session与客户端不匹配"))
 	//}
 
-	// 过期检测
-	if time.Now().After(s.ExpireTime) {
-		return static.SessionExpired
-	}
-
 	return nil
+}
+
+func (j *mysql) Destroy(userId uint) error {
+	return model.LogoutAll(userId)
 }

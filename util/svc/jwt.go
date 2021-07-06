@@ -15,7 +15,7 @@ type j struct {
 	*model.User
 }
 
-func (d *j) GenToken(userId, clientId uint) (string, error) {
+func (d *j) Generate(userId, _ uint) (string, error) {
 	var u model.User
 	if err := db.Db.First(&u, userId).Error; err != nil {
 		return "", err
@@ -24,12 +24,12 @@ func (d *j) GenToken(userId, clientId uint) (string, error) {
 	return jwt.GenToken(j{&u}, "", config.Svc.ExpireTime)
 }
 
-func (d *j) ConfirmToken(token string) error {
+func (d *j) Confirm(token string) error {
 	_, err := validToken(token)
 	return err
 }
 
-func (d *j) ValidToken(token string, user *model.User) error {
+func (d *j) Valid(token string, user *model.User) error {
 	x, err := validToken(token)
 
 	if err != nil {
@@ -59,4 +59,8 @@ func validToken(token string) (*jwt.Claims, error) {
 	}
 
 	return x, nil
+}
+
+func (x *j) Destroy(_ uint) error {
+	return nil
 }

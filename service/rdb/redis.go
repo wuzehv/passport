@@ -47,12 +47,12 @@ func init() {
 	}
 }
 
-func SetJson(k string, v interface{}, expiration time.Duration) (reply interface{}, err error) {
+func SetJson(k string, v interface{}, expiration int) (reply interface{}, err error) {
 	conn := Rdb.Get()
 	defer conn.Close()
 
 	str, _ := json.Marshal(v)
-	return conn.Do("SET", k, str, "EX", int(expiration))
+	return conn.Do("SET", k, str, "EX", expiration)
 }
 
 func GetJson(k string, v interface{}) bool {

@@ -57,26 +57,29 @@ sso.com:8099
 ```
 
 ## TODO
-- [X] 登录逻辑
-- [X] 退出逻辑
-- [X] 签名机制
-- [X] 引入redis做svc接口
-- [ ] IP白名单
-- [X] 登录错误次数限制
+- [ ] SSO
+  - [X] 登录逻辑
+  - [X] 退出逻辑
+  - [X] 签名机制
+  - [X] 引入redis做svc接口
+  - [X] 登录错误次数限制
+  - [X] 考虑jwt使用
+  - [X] swagger(http://sso.com:8099/swagger/index.html#/)
+  - [ ] IP白名单
+  - [ ] sso接口交互不用cookie
+
 - [ ] 后台功能列表
   - [X] 接口管理
   - [X] 用户管理
   - [X] 客户端管理
+  - [X] validator详细使用
   - [ ] 菜单管理
   - [ ] 权限管理
-  - [X] validator详细使用
-- [X] 业务日志打印
-- [ ] 日志切割
-- [X] 考虑jwt使用
-- [ ] 考虑加入验证码
-- [ ] 日志trace id
-- [X] sso中心后台
-- [X] swagger(http://sso.com:8099/swagger/index.html#/)
+  
+- [ ] 日志
+  - [X] 业务日志公共方法
+  - [ ] 日志trace id
+  - [ ] 日志切割
 
 ## 对接流程
 ### svc接口
