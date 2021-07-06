@@ -90,5 +90,8 @@ func (c Code) Msg(data interface{}) Response {
 }
 
 func (c Code) Error() string {
+	if int(c) >= len(errors) {
+		return errors[SystemError]
+	}
 	return errors[c]
 }

@@ -14,11 +14,11 @@ type mysql struct {
 	data
 }
 
-func (j *mysql) Generate(userId, clientId uint) (string, error) {
+func (_ *mysql) Generate(userId, clientId uint) (string, error) {
 	return model.NewSession(userId, clientId)
 }
 
-func (j *mysql) Confirm(token string) error {
+func (_ *mysql) Confirm(token string) error {
 	var s model.Session
 
 	if err := s.GetByToken(token); err != nil {
@@ -39,7 +39,7 @@ func (j *mysql) Confirm(token string) error {
 	return nil
 }
 
-func (j *mysql) Valid(token string, user *model.User) error {
+func (_ *mysql) Valid(token string, user *model.User) error {
 	var s model.Session
 	err := s.GetByToken(token)
 	if err != nil {
@@ -75,6 +75,6 @@ func (j *mysql) Valid(token string, user *model.User) error {
 	return nil
 }
 
-func (j *mysql) Destroy(userId uint) error {
+func (_ *mysql) Destroy(userId uint) error {
 	return model.LogoutAll(userId)
 }
