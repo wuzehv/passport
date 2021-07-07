@@ -2,9 +2,9 @@ package middleware
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/wuzehv/passport/util/config"
+	"github.com/wuzehv/passport/util/file"
 	"io"
 	"log"
 	"os"
@@ -29,18 +29,11 @@ func init() {
 	gin.DisableConsoleColor()
 
 	logDir := config.Log.Dir
-	if _, err := os.Stat(logDir); os.IsNotExist(err) {
-		if err = os.MkdirAll(logDir, 0777); err != nil {
-			fmt.Println(logDir)
-			log.Fatalf("log dir create error: %v\n", err)
-		}
-	}
+	filename := time.Now().Format(config.Log.Filename) + ".log"
 
-	finalFile := logDir + "/gin.log"
-
-	f, err := os.OpenFile(finalFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	f, err := file.AppendOpenFile(logDir, filename)
 	if err != nil {
-		log.Fatalf("log file create error: %v\n", err)
+		log.Fatalf("log init error: %v\n", err)
 	}
 
 	writer := []io.Writer{

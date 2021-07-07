@@ -43,7 +43,8 @@ type redis struct {
 }
 
 type log struct {
-	Dir string
+	Dir      string
+	Filename string
 }
 
 type svc struct {

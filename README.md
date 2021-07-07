@@ -77,7 +77,14 @@ password: 123456
 - [ ] 日志
   - [X] 业务日志公共方法
   - [ ] 日志trace id
-  - [ ] 日志切割
+  - [X] 日志切割
+  
+- [ ] 部署
+  - [ ] systemctl
+  - [ ] nginx upstream(option)
+  
+- [ ] 对接
+  - [ ] php业务对接
 
 ## 对接流程
 ### svc接口

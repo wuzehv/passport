@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/wuzehv/passport/router"
 	"github.com/wuzehv/passport/util/config"
+	_ "github.com/wuzehv/passport/util/journal"
 	"log"
 )
 
