@@ -80,7 +80,7 @@ password: 123456
   - [X] 日志切割
   
 - [ ] 部署
-  - [ ] systemctl
+  - [X] systemd
   - [ ] nginx upstream(option)
   
 - [ ] 对接

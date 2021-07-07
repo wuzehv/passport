@@ -90,7 +90,7 @@ func getConfigFile() string {
 
 	for _, v := range priorityIni {
 		configFile := fmt.Sprintf("%s%sconf%s%s", path, string(os.PathSeparator), string(os.PathSeparator), v)
-		if _, err := os.Stat(configFile); !os.IsNotExist(err) {
+		if _, err = os.Stat(configFile); !os.IsNotExist(err) {
 			return configFile
 		}
 	}

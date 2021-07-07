@@ -1,0 +1,13 @@
+[Unit]
+Description=passport service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/mnt/www/passport/passport > /dev/null 2>&1 &
+KillMode=control-group
+RestartSec=0
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
