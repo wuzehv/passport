@@ -26,7 +26,6 @@ func Index(c *gin.Context) {
 	cl := tmp.(*model.Client)
 
 	jump := c.GetString(static.Jump)
-
 	uid := c.GetInt(static.Uid)
 
 	if uid == 0 {
@@ -81,14 +80,20 @@ func Login(c *gin.Context) {
 
 	if model.FailNumOut() {
 		r.Type = model.TypeOther
-		db.Db.Save(&r)
+		if err = db.Db.Save(&r).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+			return
+		}
 		c.JSON(http.StatusForbidden, static.UsernamePasswdFailNumOut.Msg(nil))
 		return
 	}
 
 	if !common.VerifyPassword(u.Password, data.Password) {
 		r.Type = model.TypeFail
-		db.Db.Save(&r)
+		if err = db.Db.Save(&r).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+			return
+		}
 		c.JSON(http.StatusForbidden, static.UsernamePasswdNotMatch.Msg(nil))
 		return
 	}
@@ -98,7 +103,11 @@ func Login(c *gin.Context) {
 	u.Token = token
 	exp, _ := time.Parse("2006-01-02 15:04:05", time.Now().Add(config.Svc.ExpireTime).Format("2006-01-02")+" 04:00:00")
 	u.ExpireTime = exp
-	db.Db.Save(&u)
+	if err = db.Db.Save(&u).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		return
+	}
+
 	// 设置会话为浏览器关闭即失效
 	c.SetCookie(static.CookieFlag, token, 0, "/", "", !config.IsDev(), true)
 
@@ -110,7 +119,10 @@ func Login(c *gin.Context) {
 	}
 
 	r.Type = model.TypeSuccess
-	db.Db.Save(&r)
+	if err = db.Db.Save(&r).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		return
+	}
 
 	commonDeal(c, cl, u.Id, jump)
 }
@@ -132,14 +144,13 @@ func commonDeal(c *gin.Context, cl *model.Client, userId uint, jump string) {
 
 	callbackUrl.RawQuery = callbackParams.Encode()
 
-	isSso := c.GetBool(static.Sso)
-
-	if isSso {
+	isClient := c.GetBool(static.Sso)
+	if isClient {
 		c.HTML(http.StatusOK, "sso/redirect", gin.H{
 			"callback": callbackUrl,
 		})
 	} else {
-		// 如果不是sso，跳转到首页
+		// 如果是sso中心登录，跳转到首页
 		c.Redirect(http.StatusMovedPermanently, "/api/v1/index")
 		// todo 直接返回json
 		//c.JSON(http.StatusOK, static.Success.Msg(token))
