@@ -1,0 +1,34 @@
+{[{ define "sso/login" }]}
+{[{ template "sso/header" }]}
+<form class="layui-form" action="/sso/login?domain={[{ .domain }]}&jump={[{ .jump }]}" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-block">
+            <input type="text" name="username" required lay-verify="required" placeholder="请输入用命名" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-block">
+            <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="login">登录</button>
+        </div>
+    </div>
+</form>
+
+<script src="/static/layui/layui.js"></script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(login)', function(data){
+        });
+    });
+</script>
+{[{ template "sso/footer" }]}
+{[{ end }]}

@@ -1,0 +1,136 @@
+{[{ define "index" }]}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Passport Center</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo layui-hide-xs layui-bg-black">
+            <a class="layui-font-gray" href="/">Passport Center</a>
+        </div>
+
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item layui-hide layui-show-md-inline-block">
+                <a href="javascript:;">
+                    <i class="layui-icon layui-icon-username"></i>
+                    tester
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">用户信息</a></dd>
+                    <dd><a href="">重置密码</a></dd>
+                    <dd><a href="/sso/logout">退出</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <ul class="layui-nav layui-nav-tree" lay-filter="nav">
+            <li class="layui-nav-item layui-nav-itemed">
+                <a href="javascript:;">基础信息</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:;" data-mod="client" data-url="/api/v1/clients">客户端管理</a></dd>
+                    <dd><a href="javascript:;" data-mod="user" data-url="/api/v1/users">用户管理</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item layui-nav-itemed">
+                <a href="javascript:;">信息查看</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:;" data-mod="record" data-url="/api/v1/users">登录日志</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div class="layui-fluid" style="padding:20px;">
+            <p>
+                <span class="layui-breadcrumb" lay-filter="breadcrumb">
+                    <a href="/">首页</a>
+                    <a href="javascript:;"><cite id="breadcrumb-name">dashboard</cite></a>
+                </span>
+            </p>
+            <br>
+
+            <div id="container">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md3">
+                        <div class="layui-panel">
+                            <div style="padding: 30px;">客户端数量：<span id="dashboard-client" class="layui-badge">{[{ .client_num }]}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md3">
+                        <div class="layui-panel">
+                            <div style="padding: 30px;">用户数量：<span id="dashboard-user"
+                                                                   class="layui-badge layui-bg-orange">{[{ .user_num }]}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md3">
+                        <div class="layui-panel">
+                            <div style="padding: 30px;">在线客户端数量：<span id="dashboard-session"
+                                                                      class="layui-badge layui-bg-green">{[{ .session_num }]}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md3">
+                        <div class="layui-panel">
+                            <div style="padding: 30px;">登录行为次数：<span id="dashboard-record"
+                                                                     class="layui-badge layui-bg-blue">{[{ .record_num }]}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div style="text-align: center;">
+                    <img src="/static/dashboard.png" style="width: 75%;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-footer" style="text-align:right;">
+        All Rights Reserved
+    </div>
+</div>
+<script src="/static/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/static/laymod/'
+    }).use('dashboard');
+
+    layui.use(['table', 'form', 'element', 'client', 'user', 'laytpl'], function () {
+        var element = layui.element
+            , client = layui.client
+            , user = layui.user
+            , laytpl = layui.laytpl;
+
+        element.on('nav(nav)', function (elem) {
+            var url = elem.data("url");
+            var mod = elem.data("mod");
+            switch (mod) {
+                case "client":
+                    client.init(elem.text(), url);
+                    break;
+                case "user":
+                    user.init(elem.text(), url);
+                    break;
+                default:
+            }
+        });
+    });
+</script>
+
+{[{ template "client" }]}
+{[{ template "user" }]}
+
+</body>
+</html>
+{[{ end }]}

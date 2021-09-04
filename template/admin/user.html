@@ -1,0 +1,17 @@
+{[{ define "user" }]}
+<script type="text/html" id="userContainer">
+    <div class="userSearch">
+        ID：
+        <div class="layui-inline">
+            <input class="layui-input" id="userId" autocomplete="off">
+        </div>
+        邮箱：
+        <div class="layui-inline">
+            <input class="layui-input" id="userEmail" autocomplete="off">
+        </div>
+        <button class="layui-btn layui-bg-blue search-btn" data-type="reload">搜索</button>
+        <button class="layui-btn layui-bg-green" data-type="reload">新增</button>
+    </div>
+    <table id="userTable" lay-filter="userTable"></table>
+</script>
+{[{ end }]}

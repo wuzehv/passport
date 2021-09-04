@@ -1,0 +1,68 @@
+{[{ define "client" }]}
+<script type="text/html" id="clientContainer">
+    <div class="clientSearch">
+        ID：
+        <div class="layui-inline">
+            <input class="layui-input" id="clientId" autocomplete="off">
+        </div>
+        域名：
+        <div class="layui-inline">
+            <input class="layui-input" id="clientDomain" autocomplete="off">
+        </div>
+        <button class="layui-btn layui-bg-blue search-btn" data-type="reload">搜索</button>
+        <button class="layui-btn create-btn" data-type="reload">新增</button>
+    </div>
+    <table id="clientTable" lay-filter="clientTable"></table>
+</script>
+
+<script type="text/html" id="clientTableTool">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    {{# if(d.status === 1) {
+        var c = 'layui-bg-red'; var text = '禁用';
+    } else {
+        var c = 'layui-bg-green'; var text = '启用';
+    } }}
+    <a class="layui-btn {{ c }} layui-btn-xs" lay-event="del">{{ text }}</a>
+</script>
+
+<script type="text/html" id="clientCreate">
+    <form class="layui-form layui-form-pane" action="" style="padding:50px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" required  lay-verify="required" placeholder="客户端名称" autocomplete="off" class="layui-input" style="width:400px;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">域名</label>
+            <div class="layui-input-block">
+                <input type="text" name="domain" required  lay-verify="required" placeholder="全局唯一 ip:port，不需要协议" autocomplete="off" class="layui-input" style="width:400px;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">回调地址</label>
+            <div class="layui-input-inline">
+                <input type="text" name="callback" required  id="callbackUrl" lay-verify="required" placeholder="http(s)://xxxxxx/callback" autocomplete="off" class="layui-input" style="width:400px;">
+            </div>
+            <div class="layui-inline">
+                <a class="layui-btn layui-bg-red" style="margin-left: 220px;" id="checkCallbackUrl">校验</a>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密钥</label>
+            <div class="layui-input-inline">
+                <input type="text" name="secret" required  id="clientSecret" lay-verify="required" placeholder="对接密钥" autocomplete="off" class="layui-input" style="width:400px;">
+            </div>
+            <div class="layui-inline">
+                <a class="layui-btn layui-bg-red" style="margin-left: 220px;" id="generateSecret">初始化密钥</a>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="clientSubmit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</script>
+{[{ end }]}

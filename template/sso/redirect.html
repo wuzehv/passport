@@ -1,0 +1,9 @@
+{[{ define "sso/redirect" }]}
+<head>
+    <meta http-equiv="refresh" content="2;url={[{ .callback }]}">
+</head>
+
+<div>
+    <h3>登陆成功，正在跳转至 <u>{[{ .callback }]}</u></h3>
+</div>
+{[{ end }]}
