@@ -1,7 +1,7 @@
 layui.define('common', function (exports) {
-    var common = layui.common
-        , table = layui.table
-        , $ = layui.$;
+    var common = layui.common,
+        table = layui.table,
+        $ = layui.$;
 
     var obj = {
         init: function (name, url) {
@@ -13,36 +13,36 @@ layui.define('common', function (exports) {
 
             // 表格渲染
             var clientTable = table.render({
-                elem: '#clientTable'
-                , url: url
-                , autoSort: common.autoSort
-                , page: common.page
-                , toolbar: common.toolbar
-                , height: common.height
-                , parseData: common.parseData
-                , request: common.request
-                , cellMinWidth: common.cellMinWidth
-                , initSort: common.initSort
-                , cols: [[ //表头
-                    {field: 'id', title: 'ID', sort: true, fixed: 'left'}
-                    , {field: 'domain', title: '域名', minWidth: 200}
-                    , {field: 'callback', title: '回调地址', minWidth: 300}
-                    , {field: 'secret', title: '密钥', minWidth: 130}
-                    , {field: 'status', title: '状态'}
-                    , {field: 'created_at', title: '创建时间', minWidth: 200, sort: true}
-                    , {field: '', title: '操作', minWidth: 200, toolbar: '#clientTableTool'}
+                elem: '#clientTable',
+                url: url,
+                autoSort: common.autoSort,
+                page: common.page,
+                toolbar: common.toolbar,
+                height: common.height,
+                parseData: common.parseData,
+                request: common.request,
+                cellMinWidth: common.cellMinWidth,
+                initSort: common.initSort,
+                cols: [[ //表头
+                    {field: 'id', title: 'ID', sort: true, fixed: 'left'},
+                    {field: 'domain', title: '域名', minWidth: 200},
+                    {field: 'callback', title: '回调地址', minWidth: 300},
+                    {field: 'secret', title: '密钥', minWidth: 130},
+                    {field: 'status', title: '状态'},
+                    {field: 'created_at', title: '创建时间', minWidth: 200, sort: true},
+                    {field: '', title: '操作', minWidth: 200, toolbar: '#clientTableTool'}
                 ]]
             });
 
             // 排序
             table.on('sort(clientTable)', function (obj) {
                 clientTable.reload({
-                    initSort: obj
-                    , where: {
-                        id: id.val()
-                        , domain: domain.val()
-                        , order_field: obj.field
-                        , order_type: obj.type
+                    initSort: obj,
+                    where: {
+                        id: id.val(),
+                        domain: domain.val(),
+                        order_field: obj.field,
+                        order_type: obj.type
                     }
                 });
             });
@@ -50,10 +50,10 @@ layui.define('common', function (exports) {
             var active = {
                 reload: function () {
                     clientTable.reload({
-                        initSort: common.initSort
-                        , where: {
-                            id: id.val()
-                            , domain: domain.val()
+                        initSort: common.initSort,
+                        where: {
+                            id: id.val(),
+                            domain: domain.val()
                         }
                     });
                 }
@@ -85,8 +85,8 @@ layui.define('common', function (exports) {
 
                     //同步更新缓存对应的值
                     obj.update({
-                        username: '123'
-                        , title: 'xxx'
+                        username: '123',
+                        title: 'xxx'
                     });
                 } else if (layEvent === 'LAYTABLE_TIPS') {
                     layer.alert('Hi，头部工具栏扩展的右侧图标。');

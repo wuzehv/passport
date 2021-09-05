@@ -2,10 +2,15 @@ package user
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/jordan-wright/email"
 	"github.com/wuzehv/passport/model"
 	"github.com/wuzehv/passport/service/db"
+	"github.com/wuzehv/passport/service/goemail"
+	"github.com/wuzehv/passport/service/rdb"
 	"github.com/wuzehv/passport/util/common"
+	"github.com/wuzehv/passport/util/config"
 	"github.com/wuzehv/passport/util/static"
 	"gorm.io/gorm"
 	"net/http"
@@ -158,6 +163,38 @@ type ResetPasswordForm struct {
 	PasswordVerify string `form:"password_verify" json:"password_verify" binding:"required" minLength:"1" maxLength:"255"` // 确认密码
 }
 
+func ResetPassword(c *gin.Context) {
+	//u, _ := c.Get(static.User)
+	//user := u.(*model.User)
+
+	// 发送邮件到电子邮箱
+	e := email.NewEmail()
+	e.From = config.Email.UserName
+	// 设置接收方的邮箱
+	//e.To = []string{user.Email}
+	e.To = []string{"wuzehui@flashexpress.com"}
+	e.Subject = "重置密码"
+
+	token := common.GenToken()
+	url := "http://" + config.App.Domain + config.App.Port + "/common/reset-password?token=" + token
+	e.HTML = []byte(fmt.Sprintf(`请使用下面的链接进行重置密码：<br><a href="%s">%[1]s</a><br>仅在收到邮件的十分钟内有效！`, url))
+
+	if err := goemail.Send(e); err != nil {
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		return
+	}
+
+	conn := rdb.Rdb.Get()
+	defer conn.Close()
+
+	if _, err := conn.Do("setex", token, 600, 1); err != nil {
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		return
+	}
+
+	c.JSON(http.StatusOK, nil)
+}
+
 // @Description 重置密码
 // @Tags 用户管理
 // @Accept application/x-www-form-urlencoded
@@ -169,7 +206,7 @@ type ResetPasswordForm struct {
 // @Failure 404 {object} static.Response
 // @Failure 500 {object} static.Response
 // @Router /api/v1/users/{id}/reset-password [POST]
-func ResetPassword(c *gin.Context) {
+func ResetPassword2(c *gin.Context) {
 	id := c.Param("id")
 
 	var d model.User

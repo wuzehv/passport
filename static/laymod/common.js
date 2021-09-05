@@ -3,35 +3,44 @@ layui.define(function (exports) {
 
     var obj = {
         // 公共配置项
-        page: true
-        , toolbar: false
-        , height: 'full-250'
-        , cellMinWidth: 80
-        , autoSort: false
-        , parseData: function (res) {
+        page: true,
+        toolbar: false,
+        height: 'full-250',
+        cellMinWidth: 80,
+        autoSort: false,
+        parseData: function (res) {
             return {
                 "code": res.code,
                 "msg": res.message,
                 "count": res.data.total,
                 "data": res.data.items
             };
-        }
-        , request: {
-            pageName: 'page'
-            , limitName: 'page_size'
-        }
-        , container: $('#container')
-        , init: function (html) {
+        },
+        request: {
+            pageName: 'page',
+            limitName: 'page_size'
+        },
+        container: $('#container'),
+        initSort: {
+            field: 'id',
+            type: 'desc'
+        },
+        successCode: 0,
+        init: function (html) {
             this.container.empty().html(html)
-        }
-        , breadcrumb: function (name) {
+        },
+        breadcrumb: function (name) {
             $('#breadcrumb-name').text(name);
-        }
-        , initSort: {
-            field: 'id'
-            , type: 'desc'
-        }
-        , successCode: 0
+        },
+        template: {
+            status: function(status) {
+                if (status === 1) {
+                    return '启用'
+                } else {
+                    return '禁用'
+                }
+            },
+        },
     }
 
     exports('common', obj);

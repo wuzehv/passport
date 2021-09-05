@@ -18,11 +18,10 @@
             <li class="layui-nav-item layui-hide layui-show-md-inline-block">
                 <a href="javascript:;">
                     <i class="layui-icon layui-icon-username"></i>
-                    tester
+                    {[{ .user_name }]}
                 </a>
                 <dl class="layui-nav-child">
-                    <dd><a href="">用户信息</a></dd>
-                    <dd><a href="">重置密码</a></dd>
+                    <dd><a href="javascript:;" id="resetPasswd">重置密码</a></dd>
                     <dd><a href="/sso/logout">退出</a></dd>
                 </dl>
             </li>
@@ -104,13 +103,13 @@
 <script>
     layui.config({
         base: '/static/laymod/'
-    }).use('dashboard');
+    });
 
     layui.use(['table', 'form', 'element', 'client', 'user', 'laytpl'], function () {
-        var element = layui.element
-            , client = layui.client
-            , user = layui.user
-            , laytpl = layui.laytpl;
+        var element = layui.element,
+            client = layui.client,
+            user = layui.user,
+            $ = layui.$;
 
         element.on('nav(nav)', function (elem) {
             var url = elem.data("url");
@@ -124,6 +123,21 @@
                     break;
                 default:
             }
+        });
+
+        $('#resetPasswd').on('click', function() {
+            $.ajax({
+                type: "POST",
+                url: "/api/v1/users/reset-password",
+                success: function (data) {
+                    layer.alert('重置邮件已发送，请登录注册邮件进行操作。', {
+                        icon: 1,
+                    })
+                },
+                error: function (jqXHR, textStatus, error) {
+                    layer.msg(error);
+                }
+            })
         });
     });
 </script>

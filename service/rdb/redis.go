@@ -23,8 +23,8 @@ func init() {
 				return nil, err
 			}
 
-			if config.Redis.Passwd != "" {
-				if _, err := c.Do("AUTH", config.Redis.Passwd); err != nil {
+			if config.Redis.Password != "" {
+				if _, err := c.Do("AUTH", config.Redis.Password); err != nil {
 					c.Close()
 					log.Fatalf("redis auth error: %v\n", err)
 					return nil, err

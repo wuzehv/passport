@@ -25,7 +25,7 @@ type app struct {
 type db struct {
 	Host               string
 	User               string
-	Passwd             string
+	Password           string
 	DbName             string
 	Charset            string
 	MaxIdleConn        int
@@ -35,7 +35,7 @@ type db struct {
 
 type redis struct {
 	Host               string
-	Passwd             string
+	Password           string
 	DbNum              int
 	MaxIdleConn        int
 	MaxActiveConn      int
@@ -52,6 +52,15 @@ type svc struct {
 	ExpireTime time.Duration
 }
 
+type email struct {
+	UserName    string
+	Password    string
+	Address     string
+	Host        string
+	SendTimeout time.Duration
+	PoolSize    int
+}
+
 var (
 	config *ini.File
 	App    = &app{}
@@ -59,6 +68,7 @@ var (
 	Redis  = &redis{}
 	Log    = &log{}
 	Svc    = &svc{}
+	Email  = &email{}
 )
 
 // ini文件加载优先级
@@ -80,6 +90,7 @@ func init() {
 	mapTo("redis", Redis)
 	mapTo("log", Log)
 	mapTo("svc", Svc)
+	mapTo("email", Email)
 }
 
 func getConfigFile() string {

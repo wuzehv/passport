@@ -14,7 +14,7 @@ import (
 var Db *gorm.DB
 
 func init() {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=true", config.Db.User, config.Db.Passwd, config.Db.Host, config.Db.DbName, config.Db.Charset)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=true", config.Db.User, config.Db.Password, config.Db.Host, config.Db.DbName, config.Db.Charset)
 
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags),

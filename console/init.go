@@ -25,7 +25,7 @@ func main() {
 	}
 
 	u := config.Db.User
-	passwd := config.Db.Passwd
+	passwd := config.Db.Password
 	host := config.Db.Host
 	dbName := config.Db.DbName
 	charset := config.Db.Charset

@@ -26,23 +26,27 @@
 </script>
 
 <script type="text/html" id="clientCreate">
-    <form class="layui-form layui-form-pane" action="" style="padding:50px;">
+    <form class="layui-form layui-form-pane" action="" style="padding:25px 50px;">
         <div class="layui-form-item">
             <label class="layui-form-label">名称</label>
             <div class="layui-input-block">
-                <input type="text" name="name" required  lay-verify="required" placeholder="客户端名称" autocomplete="off" class="layui-input" style="width:400px;">
+                <input type="text" name="name" required lay-verify="required" placeholder="客户端名称" autocomplete="off"
+                       class="layui-input" style="width:400px;">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">域名</label>
             <div class="layui-input-block">
-                <input type="text" name="domain" required  lay-verify="required" placeholder="全局唯一 ip:port，不需要协议" autocomplete="off" class="layui-input" style="width:400px;">
+                <input type="text" name="domain" required lay-verify="required" placeholder="全局唯一 ip:port，不需要协议"
+                       autocomplete="off" class="layui-input" style="width:400px;">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">回调地址</label>
             <div class="layui-input-inline">
-                <input type="text" name="callback" required  id="callbackUrl" lay-verify="required" placeholder="http(s)://xxxxxx/callback" autocomplete="off" class="layui-input" style="width:400px;">
+                <input type="text" name="callback" required id="callbackUrl" lay-verify="required"
+                       placeholder="http(s)://xxxxxx/callback" autocomplete="off" class="layui-input"
+                       style="width:400px;">
             </div>
             <div class="layui-inline">
                 <a class="layui-btn layui-bg-red" style="margin-left: 220px;" id="checkCallbackUrl">校验</a>
@@ -51,7 +55,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">密钥</label>
             <div class="layui-input-inline">
-                <input type="text" name="secret" required  id="clientSecret" lay-verify="required" placeholder="对接密钥" autocomplete="off" class="layui-input" style="width:400px;">
+                <input type="text" name="secret" required id="clientSecret" lay-verify="required" placeholder="对接密钥"
+                       autocomplete="off" class="layui-input" style="width:400px;">
             </div>
             <div class="layui-inline">
                 <a class="layui-btn layui-bg-red" style="margin-left: 220px;" id="generateSecret">初始化密钥</a>

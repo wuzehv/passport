@@ -20,6 +20,7 @@ func construct(router *gin.Engine) {
 	constructSso(router)
 	constructAdmin(router)
 	constructSvc(router)
+	constructNoLogin(router)
 }
 
 // sso主页
@@ -46,7 +47,7 @@ func constructAdmin(router *gin.Engine) {
 		r.POST("/users", user.Add)
 		r.PUT("/users/:id", user.Update)
 		r.POST("/users/:id/toggle-status", user.ToggleStatus)
-		r.POST("/users/:id/reset-password", user.ResetPassword)
+		r.POST("/users/reset-password", user.ResetPassword)
 
 		r.GET("/clients", client.Index)
 		r.POST("/clients", client.Add)
@@ -65,5 +66,14 @@ func constructSvc(router *gin.Engine) {
 	{
 		r.POST("/userinfo", svc.Userinfo)
 		r.POST("/session", svc.Session)
+	}
+}
+
+// 不需要登录的接口
+func constructNoLogin(router *gin.Engine) {
+	r := router.Group("/common")
+	r.Use(middleware.Base(), middleware.Cors())
+	{
+		r.GET("/reset-password", user.Userinfo)
 	}
 }
