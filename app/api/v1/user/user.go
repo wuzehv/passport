@@ -11,9 +11,11 @@ import (
 	"github.com/wuzehv/passport/service/rdb"
 	"github.com/wuzehv/passport/util/common"
 	"github.com/wuzehv/passport/util/config"
+	"github.com/wuzehv/passport/util/journal"
 	"github.com/wuzehv/passport/util/static"
 	"gorm.io/gorm"
 	"net/http"
+	"strconv"
 )
 
 type Form struct {
@@ -159,24 +161,33 @@ func ToggleStatus(c *gin.Context) {
 }
 
 type ResetPasswordForm struct {
+	Token          string `form:"token" binding:"required" minLength:"1" maxLength:"255"`
 	Password       string `form:"password" binding:"required" minLength:"1" maxLength:"255"`                               // 新密码
 	PasswordVerify string `form:"password_verify" json:"password_verify" binding:"required" minLength:"1" maxLength:"255"` // 确认密码
 }
 
+// @Description 重置密码
+// @Tags 用户管理
+// @Accept application/x-www-form-urlencoded
+// @Produce application/json
+// @Success 200 {object} static.Response
+// @Failure 400 {object} static.Response
+// @Failure 404 {object} static.Response
+// @Failure 500 {object} static.Response
+// @Router /api/v1/users/reset-password [POST]
 func ResetPassword(c *gin.Context) {
-	//u, _ := c.Get(static.User)
-	//user := u.(*model.User)
+	u, _ := c.Get(static.User)
+	user := u.(*model.User)
 
 	// 发送邮件到电子邮箱
 	e := email.NewEmail()
 	e.From = config.Email.UserName
 	// 设置接收方的邮箱
-	//e.To = []string{user.Email}
-	e.To = []string{"wuzehui@flashexpress.com"}
+	e.To = []string{user.Email}
 	e.Subject = "重置密码"
 
 	token := common.GenToken()
-	url := "http://" + config.App.Domain + config.App.Port + "/common/reset-password?token=" + token
+	url := "http://" + config.App.Domain + config.App.Port + "/common/reset-password?" + static.Token + "=" + token
 	e.HTML = []byte(fmt.Sprintf(`请使用下面的链接进行重置密码：<br><a href="%s">%[1]s</a><br>仅在收到邮件的十分钟内有效！`, url))
 
 	if err := goemail.Send(e); err != nil {
@@ -187,12 +198,36 @@ func ResetPassword(c *gin.Context) {
 	conn := rdb.Rdb.Get()
 	defer conn.Close()
 
-	if _, err := conn.Do("setex", token, 600, 1); err != nil {
+	if _, err := conn.Do("SETEX", token, 600, user.Id); err != nil {
 		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
 	c.JSON(http.StatusOK, nil)
+}
+
+func ResetPasswordPage(c *gin.Context) {
+	token := c.Query(static.Token)
+
+	conn := rdb.Rdb.Get()
+	defer conn.Close()
+
+	cache, err := conn.Do("GET", token)
+	if err != nil {
+		journal.Error("reset_password", err)
+		fmt.Fprintf(c.Writer, "系统错误，请联系管理员")
+		return
+	}
+
+	if cache == nil {
+		fmt.Fprintf(c.Writer, "链接已过期，请重新申请")
+		return
+	}
+
+	c.HTML(http.StatusOK, "sso/reset-password", gin.H{
+		"token": token,
+	})
+	return
 }
 
 // @Description 重置密码
@@ -206,22 +241,7 @@ func ResetPassword(c *gin.Context) {
 // @Failure 404 {object} static.Response
 // @Failure 500 {object} static.Response
 // @Router /api/v1/users/{id}/reset-password [POST]
-func ResetPassword2(c *gin.Context) {
-	id := c.Param("id")
-
-	var d model.User
-	m := db.Db.First(&d, id)
-	err := m.Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		c.JSON(http.StatusNotFound, static.ParamsError.Msg(nil))
-		return
-	}
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
-		return
-	}
-
+func DoResetPassword(c *gin.Context) {
 	var data ResetPasswordForm
 	if err := c.ShouldBind(&data); err != nil {
 		c.JSON(http.StatusBadRequest, static.ParamsError.Msg(err))
@@ -233,10 +253,40 @@ func ResetPassword2(c *gin.Context) {
 		return
 	}
 
+	conn := rdb.Rdb.Get()
+	defer conn.Close()
+	cahce, err := conn.Do("GET", data.Token)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		return
+	}
+
+	var d model.User
+	id, err := strconv.Atoi(fmt.Sprintf("%s", cahce))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		return
+	}
+
+	m := db.Db.First(&d, id)
+	err = m.Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		c.JSON(http.StatusNotFound, static.ParamsError.Msg(nil))
+		return
+	}
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		return
+	}
+
 	if err := m.Update("password", common.GenPassword(data.Password)).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, static.Success.Msg(nil))
+	conn.Do("DEL", data.Token)
+
+	c.SetCookie(static.CookieFlag, "false", -1, "/", "", !config.IsDev(), true)
+	c.Redirect(http.StatusMovedPermanently, "/sso/index")
 }

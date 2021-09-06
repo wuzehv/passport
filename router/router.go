@@ -74,6 +74,7 @@ func constructNoLogin(router *gin.Engine) {
 	r := router.Group("/common")
 	r.Use(middleware.Base(), middleware.Cors())
 	{
-		r.GET("/reset-password", user.Userinfo)
+		r.GET("/reset-password", user.ResetPasswordPage)
+		r.POST("/reset-password", user.DoResetPassword)
 	}
 }

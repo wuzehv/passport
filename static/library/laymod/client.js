@@ -30,11 +30,16 @@ layui.define(['common', 'form'], function (exports) {
                     {field: 'domain', title: '域名', minWidth: 200},
                     {field: 'callback', title: '回调地址', minWidth: 300},
                     {field: 'secret', title: '密钥', minWidth: 130},
-                    {field: 'status', title: '状态', templet: function(d) {
+                    {
+                        field: 'status', title: '状态', templet: function (d) {
                             return common.template.status(d.status);
                         }
                     },
-                    {field: 'created_at', title: '创建时间', minWidth: 200, sort: true},
+                    {
+                        field: 'created_at', title: '创建时间', minWidth: 200, sort: true, templet: function (d) {
+                            return common.formatDateTime(d.created_at);
+                        }
+                    },
                     {field: '', title: '操作', minWidth: 200, toolbar: '#clientTableTool'}
                 ]]
             });
@@ -129,9 +134,11 @@ layui.define(['common', 'form'], function (exports) {
             form.on('submit(clientSubmit)', function (data) {
                 $.ajax({
                     type: "POST",
-                    url: "/api/v1/users/reset-passwd",
+                    data: data.field,
+                    url: "/api/v1/clients",
                     success: function (data) {
-                        console.log(data);
+                        layer.closeAll('page');
+                        active.reload();
                     },
                     error: function (jqXHR, textStatus, error) {
                         layer.msg(error);

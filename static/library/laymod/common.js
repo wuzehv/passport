@@ -41,6 +41,9 @@ layui.define(function (exports) {
                 }
             },
         },
+        formatDateTime: function(t) {
+            return moment(t).format("YYYY-MM-DD HH:mm:ss");
+        },
     }
 
     exports('common', obj);
