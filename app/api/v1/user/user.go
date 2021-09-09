@@ -16,6 +16,7 @@ import (
 	"gorm.io/gorm"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type Form struct {
@@ -35,7 +36,33 @@ type Form struct {
 // @Router /api/v1/users [GET]
 func Index(c *gin.Context) {
 	var t model.User
-	res, err := model.PaginateContext(c, &model.Param{Table: &t})
+
+	id := c.Query("id")
+	userEmail := c.Query("email")
+
+	p := model.Param{
+		Table:      &t,
+		Bind:       make(map[string]interface{}),
+		OrderField: c.Query(static.OrderField),
+		OrderType:  c.Query(static.OrderType),
+	}
+
+	var where strings.Builder
+	where.WriteString("1")
+
+	if strings.TrimSpace(id) != "" {
+		p.Bind["id"] = id
+		where.WriteString(" and id = @id")
+	}
+
+	if strings.TrimSpace(userEmail) != "" {
+		p.Bind["email"] = "%" + userEmail + "%"
+		where.WriteString(" and email like @email")
+	}
+
+	p.Where = where.String()
+
+	res, err := model.PaginateContext(c, &p)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
 		return

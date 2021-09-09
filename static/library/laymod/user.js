@@ -32,7 +32,11 @@ layui.define('common', function (exports) {
                             return common.template.status(d.status);
                         }
                     },
-                    {field: 'created_at', title: '创建时间', minWidth: 200, sort: true},
+                    {
+                        field: 'created_at', title: '创建时间', minWidth: 200, sort: true, templet: function (d) {
+                            return common.formatDateTime(d.created_at);
+                        }
+                    },
                     {field: '', title: '操作', minWidth: 200, toolbar: '#userTableTool'}
                 ]]
             });

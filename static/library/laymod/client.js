@@ -93,6 +93,13 @@ layui.define(['common', 'form'], function (exports) {
                     });
                 } else if (layEvent === 'edit') { //编辑
                     $('.clientSearch .create-btn').click();
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/v1/clients/?id=" + data.id,
+                        success: function (data) {
+                            form.val("clientUpdate", data.data.items[0]);
+                        }
+                    })
                 }
             });
 
