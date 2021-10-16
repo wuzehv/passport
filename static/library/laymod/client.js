@@ -139,10 +139,16 @@ layui.define(['common', 'form'], function (exports) {
 
             // 表单提交
             form.on('submit(clientSubmit)', function (data) {
+                var type = "POST";
+                var url = "/api/v1/clients";
+                if (data.field.id !== "") {
+                    type = "PUT";
+                    url = "/api/v1/clients/" + data.field.id;
+                }
                 $.ajax({
-                    type: "POST",
+                    type: type,
                     data: data.field,
-                    url: "/api/v1/clients",
+                    url: url,
                     success: function (data) {
                         layer.closeAll('page');
                         active.reload();
