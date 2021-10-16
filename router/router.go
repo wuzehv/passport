@@ -39,7 +39,7 @@ func constructSso(router *gin.Engine) {
 // admin内部
 func constructAdmin(router *gin.Engine) {
 	r := router.Group("/api/v1")
-	r.Use(middleware.Base(), middleware.Cors(), middleware.Api())
+	r.Use(middleware.Base(), middleware.Rate(), middleware.Cors(), middleware.Api())
 	{
 		r.GET("/index", index.Index)
 
@@ -72,7 +72,7 @@ func constructSvc(router *gin.Engine) {
 // 不需要登录的接口
 func constructNoLogin(router *gin.Engine) {
 	r := router.Group("/common")
-	r.Use(middleware.Base(), middleware.Cors())
+	r.Use(middleware.Base(), middleware.Rate(), middleware.Cors())
 	{
 		r.GET("/reset-password", user.ResetPasswordPage)
 		r.POST("/reset-password", user.DoResetPassword)
