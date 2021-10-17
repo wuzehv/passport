@@ -55,7 +55,7 @@ func Login(c *gin.Context) {
 
 	var data Form
 	if err := c.ShouldBind(&data); err != nil {
-		c.JSON(http.StatusBadRequest, static.ParamsError.Msg(err))
+		c.JSON(static.ParamsError.Msg(err))
 		return
 	}
 
@@ -63,7 +63,7 @@ func Login(c *gin.Context) {
 	var u model.User
 	err := u.GetByEmail(data.Username)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
@@ -81,20 +81,20 @@ func Login(c *gin.Context) {
 	if model.FailNumOut() {
 		r.Type = model.TypeOther
 		if err = db.Db.Save(&r).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+			c.JSON(static.SystemError.Msg(err))
 			return
 		}
-		c.JSON(http.StatusForbidden, static.UsernamePasswdFailNumOut.Msg(nil))
+		c.JSON(static.UsernamePasswdFailNumOut.Msg(nil))
 		return
 	}
 
 	if !common.VerifyPassword(u.Password, data.Password) {
 		r.Type = model.TypeFail
 		if err = db.Db.Save(&r).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+			c.JSON(static.SystemError.Msg(err))
 			return
 		}
-		c.JSON(http.StatusForbidden, static.UsernamePasswdNotMatch.Msg(nil))
+		c.JSON(static.UsernamePasswdNotMatch.Msg(nil))
 		return
 	}
 
@@ -104,7 +104,7 @@ func Login(c *gin.Context) {
 	exp, _ := time.Parse("2006-01-02 15:04:05", time.Now().Add(config.Svc.ExpireTime).Format("2006-01-02")+" 04:00:00")
 	u.ExpireTime = exp
 	if err = db.Db.Save(&u).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
@@ -114,13 +114,13 @@ func Login(c *gin.Context) {
 	// 重置所有客户端session状态
 	err = model.LogoutAll(u.Id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
 	r.Type = model.TypeSuccess
 	if err = db.Db.Save(&r).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
@@ -134,7 +134,7 @@ func commonDeal(c *gin.Context, cl *model.Client, userId uint, jump string) {
 	adp := svc.New(config.Svc.Adapter)
 	token, err := adp.Generate(userId, cl.Id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
@@ -153,7 +153,7 @@ func commonDeal(c *gin.Context, cl *model.Client, userId uint, jump string) {
 		// 如果是sso中心登录，跳转到首页
 		c.Redirect(http.StatusMovedPermanently, "/api/v1/index")
 		// todo 直接返回json
-		//c.JSON(http.StatusOK, static.Success.Msg(token))
+		//c.JSON(static.Success.Msg(token))
 	}
 }
 
@@ -168,7 +168,7 @@ func Logout(c *gin.Context) {
 
 	adp := svc.New(config.Svc.Adapter)
 	if err := adp.Destroy(uint(uid)); err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 

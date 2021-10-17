@@ -37,14 +37,14 @@ func Api() gin.HandlerFunc {
 
 		var u model.User
 		if err = db.Db.First(&u, uid).Error; err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+			c.AbortWithStatusJSON(static.SystemError.Msg(err))
 			return
 		}
 
 		// 判断登录是否过期
 		if u.Token != token || time.Now().After(u.ExpireTime) {
 			f()
-			c.AbortWithStatusJSON(http.StatusTemporaryRedirect, static.UserNotLogin.Msg(nil))
+			c.AbortWithStatusJSON(static.UserNotLogin.Msg(nil))
 			return
 		}
 

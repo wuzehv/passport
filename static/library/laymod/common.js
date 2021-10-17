@@ -44,6 +44,18 @@ layui.define(function (exports) {
         formatDateTime: function(t) {
             return moment(t).format("YYYY-MM-DD HH:mm:ss");
         },
+        apiResponse: function (data, f, p1, p2) {
+            if (data.code !== this.successCode) {
+                if (f === undefined) {
+                    layer.msg(data.message);
+                } else {
+                    f(p1, p2);
+                }
+                return false;
+            }
+
+            return true;
+        }
     }
 
     exports('common', obj);

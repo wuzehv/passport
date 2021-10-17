@@ -69,7 +69,7 @@ func (_ *mysql) Valid(token string, user *model.User) error {
 
 	// 客户端和session不匹配
 	//if cl.Id != s.ClientId {
-	//	c.AbortWithStatusJSON(http.StatusOK, static.SystemError.Msg("session与客户端不匹配"))
+	//	c.AbortWithStatusJSON(static.SystemError.Msg("session与客户端不匹配"))
 	//}
 
 	return nil

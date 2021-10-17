@@ -55,11 +55,11 @@ func Index(c *gin.Context) {
 
 	res, err := model.PaginateContext(c, &p)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, static.Success.Msg(res))
+	c.JSON(static.Success.Msg(res))
 }
 
 // @Description 添加客户端
@@ -75,7 +75,7 @@ func Index(c *gin.Context) {
 func Add(c *gin.Context) {
 	var data Form
 	if err := c.ShouldBind(&data); err != nil {
-		c.JSON(http.StatusBadRequest, static.ParamsError.Msg(err))
+		c.JSON(static.ParamsError.Msg(err))
 		return
 	}
 
@@ -87,11 +87,11 @@ func Add(c *gin.Context) {
 		Status:   model.StatusNormal,
 	}
 	if err := db.Db.Save(&d).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, static.Success.Msg(nil))
+	c.JSON(static.Success.Msg(nil))
 }
 
 // @Description 客户端更新
@@ -109,19 +109,19 @@ func Update(c *gin.Context) {
 	id := c.Param("id")
 	var data Form
 	if err := c.ShouldBind(&data); err != nil {
-		c.JSON(http.StatusBadRequest, static.ParamsError.Msg(err))
+		c.JSON(static.ParamsError.Msg(err))
 		return
 	}
 
 	var d model.Client
 	err := db.Db.First(&d, id).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		c.JSON(http.StatusNotFound, static.ParamsError.Msg(nil))
+		c.JSON(static.ParamsError.Msg(nil))
 		return
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
@@ -129,11 +129,11 @@ func Update(c *gin.Context) {
 	d.Callback = data.Callback
 	d.Secret = data.Secret
 	if err := db.Db.Save(&d).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, static.Success.Msg(nil))
+	c.JSON(static.Success.Msg(nil))
 }
 
 // @Description 客户端启用/禁用
@@ -153,12 +153,12 @@ func ToggleStatus(c *gin.Context) {
 	m := db.Db.First(&d, id)
 	err := m.Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		c.JSON(http.StatusNotFound, static.ParamsError.Msg(nil))
+		c.JSON(static.ParamsError.Msg(nil))
 		return
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
@@ -168,11 +168,11 @@ func ToggleStatus(c *gin.Context) {
 	}
 
 	if err := m.Update("status", status).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, static.Success.Msg(nil))
+	c.JSON(static.Success.Msg(nil))
 }
 
 // @Description 检测客户端地址
@@ -189,11 +189,11 @@ func CheckCallback(c *gin.Context) {
 	url := c.Query("url")
 	res, err := http.Head(url)
 	if err != nil {
-		c.JSON(http.StatusOK, static.ParamsError.Msg(err))
+		c.JSON(static.ParamsError.Msg(err))
 		return
 	}
 
 	defer res.Body.Close()
 
-	c.JSON(http.StatusOK, static.Success.Msg(nil))
+	c.JSON(static.Success.Msg(nil))
 }

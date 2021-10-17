@@ -64,11 +64,11 @@ func Index(c *gin.Context) {
 
 	res, err := model.PaginateContext(c, &p)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, static.Success.Msg(res))
+	c.JSON(static.Success.Msg(res))
 }
 
 // @Description 添加用户
@@ -84,7 +84,7 @@ func Index(c *gin.Context) {
 func Add(c *gin.Context) {
 	var data Form
 	if err := c.ShouldBind(&data); err != nil {
-		c.JSON(http.StatusBadRequest, static.ParamsError.Msg(err))
+		c.JSON(static.ParamsError.Msg(err))
 		return
 	}
 
@@ -97,11 +97,11 @@ func Add(c *gin.Context) {
 		Status:   model.StatusNormal,
 	}
 	if err := db.Db.Save(&d).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, static.Success.Msg(nil))
+	c.JSON(static.Success.Msg(nil))
 }
 
 // @Description 用户更新
@@ -119,19 +119,19 @@ func Update(c *gin.Context) {
 	id := c.Param("id")
 	var data Form
 	if err := c.ShouldBind(&data); err != nil {
-		c.JSON(http.StatusBadRequest, static.ParamsError.Msg(err))
+		c.JSON(static.ParamsError.Msg(err))
 		return
 	}
 
 	var d model.User
 	err := db.Db.First(&d, id).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		c.JSON(http.StatusNotFound, static.ParamsError.Msg(nil))
+		c.JSON(static.ParamsError.Msg(nil))
 		return
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
@@ -141,11 +141,11 @@ func Update(c *gin.Context) {
 	d.Gender = data.Gender
 
 	if err := db.Db.Save(&d).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, static.Success.Msg(nil))
+	c.JSON(static.Success.Msg(nil))
 }
 
 // @Description 用户启用/禁用
@@ -165,12 +165,12 @@ func ToggleStatus(c *gin.Context) {
 	m := db.Db.First(&d, id)
 	err := m.Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		c.JSON(http.StatusNotFound, static.ParamsError.Msg(nil))
+		c.JSON(static.ParamsError.Msg(nil))
 		return
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
@@ -180,11 +180,11 @@ func ToggleStatus(c *gin.Context) {
 	}
 
 	if err := m.Update("status", status).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, static.Success.Msg(nil))
+	c.JSON(static.Success.Msg(nil))
 }
 
 type ResetPasswordForm struct {
@@ -218,7 +218,7 @@ func ResetPassword(c *gin.Context) {
 	e.HTML = []byte(fmt.Sprintf(`请使用下面的链接进行重置密码：<br><a href="%s">%[1]s</a><br>仅在收到邮件的十分钟内有效！`, url))
 
 	if err := goemail.Send(e); err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
@@ -226,11 +226,11 @@ func ResetPassword(c *gin.Context) {
 	defer conn.Close()
 
 	if _, err := conn.Do("SETEX", token, 600, user.Id); err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, nil)
+	c.JSON(static.Success.Msg(nil))
 }
 
 func ResetPasswordPage(c *gin.Context) {
@@ -271,12 +271,12 @@ func ResetPasswordPage(c *gin.Context) {
 func DoResetPassword(c *gin.Context) {
 	var data ResetPasswordForm
 	if err := c.ShouldBind(&data); err != nil {
-		c.JSON(http.StatusBadRequest, static.ParamsError.Msg(err))
+		c.JSON(static.ParamsError.Msg(err))
 		return
 	}
 
 	if data.Password != data.PasswordVerify {
-		c.JSON(http.StatusOK, static.ParamsError.Msg(nil))
+		c.JSON(static.ParamsError.Msg(nil))
 		return
 	}
 
@@ -284,31 +284,31 @@ func DoResetPassword(c *gin.Context) {
 	defer conn.Close()
 	cahce, err := conn.Do("GET", data.Token)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
 	var d model.User
 	id, err := strconv.Atoi(fmt.Sprintf("%s", cahce))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
 	m := db.Db.First(&d, id)
 	err = m.Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		c.JSON(http.StatusNotFound, static.ParamsError.Msg(nil))
+		c.JSON(static.ParamsError.Msg(nil))
 		return
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
 	if err := m.Update("password", common.GenPassword(data.Password)).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 

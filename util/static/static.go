@@ -3,6 +3,7 @@ package static
 import (
 	"fmt"
 	"github.com/wuzehv/passport/util/journal"
+	"net/http"
 )
 
 type Code int
@@ -77,7 +78,7 @@ type Response struct {
 	Data    interface{} `json:"data"`
 }
 
-func (c Code) Msg(data interface{}) *Response {
+func (c Code) Msg(data interface{}) (int, *Response) {
 	if c != Success {
 		if e, ok := data.(error); ok {
 			data = e.Error()
@@ -91,17 +92,17 @@ func (c Code) Msg(data interface{}) *Response {
 		}
 	}
 
-	return &Response{
+	return http.StatusOK, &Response{
 		Code:    c,
-		Message: c.Error(),
+		Message: fmt.Sprintf("%s", c),
 		Data:    data,
 	}
 }
 
 func (c Code) Error() string {
 	if int(c) >= len(errors) {
-		return fmt.Sprintf("code: %d, msg: %v", SystemError, errors[SystemError])
+		return errors[SystemError]
 	}
 
-	return fmt.Sprintf("code: %d, msg: %v", c, errors[c])
+	return errors[c]
 }

@@ -85,21 +85,25 @@ layui.define(['common', 'form'], function (exports) {
                         $.ajax({
                             type: "POST",
                             url: "/api/v1/clients/" + data.id + "/toggle-status",
-                            success: function () {
-                                layer.close(index);
-                                active.reload();
+                        }).done(function (data, text, jqXHR) {
+                            if (!common.apiResponse(data)) {
+                                return;
                             }
-                        })
+                            layer.close(index);
+                            active.reload();
+                        });
                     });
                 } else if (layEvent === 'edit') { //编辑
                     $('.clientSearch .create-btn').click();
                     $.ajax({
                         type: "GET",
                         url: "/api/v1/clients/?id=" + data.id,
-                        success: function (data) {
-                            form.val("clientUpdate", data.data.items[0]);
+                    }).done(function (data, text, jqXHR) {
+                        if (!common.apiResponse(data)) {
+                            return;
                         }
-                    })
+                        form.val("clientUpdate", data.data.items[0]);
+                    });
                 }
             });
 
@@ -123,12 +127,11 @@ layui.define(['common', 'form'], function (exports) {
                 $.ajax({
                     type: "GET",
                     url: "/api/v1/clients/check-callback?url=" + url,
-                }).done(function (message, text, jqXHR) {
-                    if (message.code !== common.successCode) {
-                        layer.alert(message.data, {icon: 5});
-                    } else {
-                        layer.alert("Success", {icon: 6});
+                }).done(function (data, text, jqXHR) {
+                    if (!common.apiResponse(data, layer.alert, data.data, {icon: 5})) {
+                        return;
                     }
+                    layer.alert("Success", {icon: 6});
                 });
             });
 
@@ -149,14 +152,13 @@ layui.define(['common', 'form'], function (exports) {
                     type: type,
                     data: data.field,
                     url: url,
-                    success: function (data) {
-                        layer.closeAll('page');
-                        active.reload();
-                    },
-                    error: function (jqXHR, textStatus, error) {
-                        layer.msg(error);
+                }).done(function (data) {
+                    if (!common.apiResponse(data)) {
+                        return;
                     }
-                })
+                    layer.closeAll('page');
+                    active.reload();
+                });
                 return false;
             });
         },

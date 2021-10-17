@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/wuzehv/passport/util/static"
 	"golang.org/x/time/rate"
-	"net/http"
 )
 
 var limiter *rate.Limiter
@@ -17,7 +16,7 @@ func init() {
 func Rate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if !limiter.Allow() {
-			c.AbortWithStatusJSON(http.StatusForbidden, static.Success.Msg(nil))
+			c.AbortWithStatusJSON(static.Success.Msg(nil))
 			return
 		}
 	}

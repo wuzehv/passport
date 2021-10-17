@@ -3,7 +3,6 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/wuzehv/passport/util/static"
-	"net/http"
 )
 
 // Cors 跨域处理
@@ -15,7 +14,7 @@ func Cors() gin.HandlerFunc {
 		c.Header("Access-Control-Max-Age", "86400")
 
 		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatusJSON(http.StatusNoContent, static.Success.Msg(nil))
+			c.AbortWithStatusJSON(static.Success.Msg(nil))
 			return
 		}
 	}

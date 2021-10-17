@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/wuzehv/passport/model"
 	"github.com/wuzehv/passport/util/static"
-	"net/http"
 	"strconv"
 )
 
@@ -15,12 +14,12 @@ func Sso() gin.HandlerFunc {
 		var cl model.Client
 		err := cl.GetByDomain(domain)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+			c.AbortWithStatusJSON(static.SystemError.Msg(err))
 			return
 		}
 
 		if cl.Id > 0 && cl.Status != model.StatusNormal {
-			c.AbortWithStatusJSON(http.StatusForbidden, static.ClientDisabled.Msg(nil))
+			c.AbortWithStatusJSON(static.ClientDisabled.Msg(nil))
 			return
 		}
 
@@ -37,7 +36,7 @@ func Sso() gin.HandlerFunc {
 
 		uid, err := strconv.Atoi(token[32:])
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, static.TokenParseError.Msg(nil))
+			c.AbortWithStatusJSON(static.TokenParseError.Msg(nil))
 			return
 		}
 

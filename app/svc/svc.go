@@ -9,7 +9,6 @@ import (
 	"github.com/wuzehv/passport/util/config"
 	"github.com/wuzehv/passport/util/static"
 	"github.com/wuzehv/passport/util/svc"
-	"net/http"
 )
 
 // @Description 客户端回调确认接口，更新session状态为已登录
@@ -24,11 +23,11 @@ func Session(c *gin.Context) {
 	token := c.GetString(static.Token)
 	adp := svc.New(config.Svc.Adapter)
 	if err := adp.Confirm(token); err != nil {
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, static.Success.Msg(nil))
+	c.JSON(static.Success.Msg(nil))
 }
 
 // @Description 客户端业务代码执行之前，调用该接口获取用户信息
@@ -47,20 +46,20 @@ func Userinfo(c *gin.Context) {
 	err := adp.Valid(token, u)
 	if err == nil {
 		if _, err = rdb.SetJson(token, u, 5); err != nil {
-			c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+			c.JSON(static.SystemError.Msg(err))
 			return
 		}
 
-		c.JSON(http.StatusOK, static.Success.Msg(u))
+		c.JSON(static.Success.Msg(u))
 		return
 	}
 
 	switch err.(static.Code) {
 	case static.SessionNotExists:
-		c.JSON(http.StatusNotFound, static.SessionNotExists.Msg(nil))
+		c.JSON(static.SessionNotExists.Msg(nil))
 	case static.SessionExpired:
-		c.JSON(http.StatusForbidden, static.SessionExpired.Msg(nil))
+		c.JSON(static.SessionExpired.Msg(nil))
 	default:
-		c.JSON(http.StatusInternalServerError, static.SystemError.Msg(err))
+		c.JSON(static.SystemError.Msg(err))
 	}
 }
