@@ -5,11 +5,24 @@ layui.define('common', function (exports) {
 
     var obj = {
         init: function (name, url) {
-            common.breadcrumb(name);
-            common.init($('#userContainer').html());
+            common.render(name, '#userContainer');
 
             var id = $('#userId');
             var email = $('#userEmail');
+
+            var active = {
+                reload: function () {
+                    userTable.reload({
+                        initSort: common.initSort,
+                        where: {
+                            id: id.val(),
+                            email: email.val()
+                        }
+                    });
+                }
+            };
+
+            common.init(active);
 
             // 表格渲染
             var userTable = table.render({
@@ -35,10 +48,18 @@ layui.define('common', function (exports) {
                     },
                     {
                         field: 'created_at', title: '创建时间', minWidth: 200, sort: true, templet: function (d) {
-                            return common.formatDateTime(d.created_at);
+                            return common.template.formatDateTime(d.created_at);
                         }
                     },
-                    {field: '', title: '操作', minWidth: 200, toolbar: '#userTableTool'}
+                    {
+                        field: '', title: '操作', minWidth: 200, templet: function (d) {
+                            var btn = "<div id=\"userTableTool\">"
+                            btn += common.template.tableTool(d);
+                            btn += "</div>";
+
+                            return btn;
+                        }
+                    },
                 ]]
             });
 
@@ -54,26 +75,6 @@ layui.define('common', function (exports) {
                     }
                 });
             });
-
-            var active = {
-                reload: function () {
-                    userTable.reload({
-                        initSort: common.initSort,
-                        where: {
-                            id: id.val(),
-                            email: email.val()
-                        }
-                    });
-                }
-            };
-
-            // 检索
-            $('.userSearch .search-btn').on('click', function () {
-                var type = $(this).data('type');
-                active[type] ? active[type].call(this) : '';
-            });
-
-
         }
     };
 

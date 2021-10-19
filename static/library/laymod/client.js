@@ -6,11 +6,24 @@ layui.define(['common', 'form'], function (exports) {
 
     var obj = {
         init: function (name, url) {
-            common.breadcrumb(name);
-            common.init($('#clientContainer').html());
+            common.render(name, '#clientContainer');
 
             var id = $('#clientId');
             var domain = $('#clientDomain');
+
+            var active = {
+                reload: function () {
+                    clientTable.reload({
+                        initSort: common.initSort,
+                        where: {
+                            id: id.val(),
+                            domain: domain.val()
+                        }
+                    });
+                }
+            };
+
+            common.init(active);
 
             // 表格渲染
             var clientTable = table.render({
@@ -37,10 +50,18 @@ layui.define(['common', 'form'], function (exports) {
                     },
                     {
                         field: 'created_at', title: '创建时间', minWidth: 200, sort: true, templet: function (d) {
-                            return common.formatDateTime(d.created_at);
+                            return common.template.formatDateTime(d.created_at);
                         }
                     },
-                    {field: '', title: '操作', minWidth: 200, toolbar: '#clientTableTool'}
+                    {
+                        field: '', title: '操作', minWidth: 200, templet: function (d) {
+                            var btn = "<div id=\"clientTableTool\">"
+                            btn += common.template.tableTool(d);
+                            btn += "</div>";
+
+                            return btn;
+                        }
+                    },
                 ]]
             });
 
@@ -55,24 +76,6 @@ layui.define(['common', 'form'], function (exports) {
                         order_type: obj.type
                     }
                 });
-            });
-
-            var active = {
-                reload: function () {
-                    clientTable.reload({
-                        initSort: common.initSort,
-                        where: {
-                            id: id.val(),
-                            domain: domain.val()
-                        }
-                    });
-                }
-            };
-
-            // 检索
-            $('.clientSearch .search-btn').on('click', function () {
-                var type = $(this).data('type');
-                active[type] ? active[type].call(this) : '';
             });
 
             // 操作按钮
@@ -94,7 +97,7 @@ layui.define(['common', 'form'], function (exports) {
                         });
                     });
                 } else if (layEvent === 'edit') { //编辑
-                    $('.clientSearch .create-btn').click();
+                    $('.search .create-btn').click();
                     $.ajax({
                         type: "GET",
                         url: "/api/v1/clients/?id=" + data.id,
@@ -109,7 +112,7 @@ layui.define(['common', 'form'], function (exports) {
 
             // 新增相关
             // 显示弹窗
-            $('.clientSearch .create-btn').on('click', function () {
+            $('.search .create-btn').on('click', function () {
                 layer.open({
                     type: 1,
                     title: ['新增客户端'],

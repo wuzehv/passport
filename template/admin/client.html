@@ -1,6 +1,6 @@
 {[{ define "client" }]}
 <script type="text/html" id="clientContainer">
-    <div class="clientSearch">
+    <div class="search">
         ID：
         <div class="layui-inline">
             <input class="layui-input" id="clientId" autocomplete="off">
@@ -10,19 +10,9 @@
             <input class="layui-input" id="clientDomain" autocomplete="off">
         </div>
         <button class="layui-btn layui-bg-blue search-btn" data-type="reload">搜索</button>
-        <button class="layui-btn create-btn" data-type="reload">新增</button>
+        <button class="layui-btn create-btn">新增</button>
     </div>
     <table id="clientTable" lay-filter="clientTable"></table>
-</script>
-
-<script type="text/html" id="clientTableTool">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    {{# if(d.status === 1) {
-        var c = 'layui-bg-red'; var text = '禁用';
-    } else {
-        var c = 'layui-bg-green'; var text = '启用';
-    } }}
-    <a class="layui-btn {{ c }} layui-btn-xs" lay-event="del">{{ text }}</a>
 </script>
 
 <script type="text/html" id="clientCreate">

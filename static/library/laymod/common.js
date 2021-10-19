@@ -26,11 +26,22 @@ layui.define(function (exports) {
             type: 'desc'
         },
         successCode: 0,
-        init: function (html) {
-            this.container.empty().html(html)
-        },
-        breadcrumb: function (name) {
+        render: function (name, id) {
             $('#breadcrumb-name').text(name);
+            this.container.empty().html($(id).html());
+        },
+        init: function (active) {
+            // 检索
+            $('.search .search-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+
+            $('.search input').on('keyup', function (e) {
+                if (e.which === 13) {
+                    active["reload"].call(this);
+                }
+            });
         },
         template: {
             status: function(status) {
@@ -40,9 +51,24 @@ layui.define(function (exports) {
                     return '禁用'
                 }
             },
-        },
-        formatDateTime: function(t) {
-            return moment(t).format("YYYY-MM-DD HH:mm:ss");
+            tableTool: function(data) {
+                var btn = "<a class=\"layui-btn layui-btn-xs\" lay-event=\"edit\">编辑</a>";
+
+                var c = 'layui-bg-red';
+                var text = '禁用';
+
+                if (data.status !== 1) {
+                    c = 'layui-bg-green';
+                    text = '启用';
+                }
+
+                btn += "<a class=\"layui-btn " + c + " layui-btn-xs\" lay-event=\"del\">" + text + "</a>";
+
+                return btn;
+            },
+            formatDateTime: function(t) {
+                return moment(t).format("YYYY-MM-DD HH:mm:ss");
+            },
         },
         apiResponse: function (data, f, p1, p2) {
             if (data.code !== this.successCode) {
@@ -55,7 +81,7 @@ layui.define(function (exports) {
             }
 
             return true;
-        }
+        },
     }
 
     exports('common', obj);

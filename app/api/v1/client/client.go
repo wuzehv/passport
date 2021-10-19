@@ -125,6 +125,7 @@ func Update(c *gin.Context) {
 		return
 	}
 
+	d.Name = data.Name
 	d.Domain = data.Domain
 	d.Callback = data.Callback
 	d.Secret = data.Secret

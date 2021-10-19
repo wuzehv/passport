@@ -106,11 +106,12 @@
         base: '/static/library/laymod/'
     });
 
-    layui.use(['table', 'form', 'element', 'client', 'user', 'laytpl'], function () {
+    layui.use(['table', 'form', 'element', 'client', 'user', 'laytpl', 'common'], function () {
         var element = layui.element,
             client = layui.client,
             user = layui.user,
-            $ = layui.$;
+            $ = layui.$,
+            common = layui.common;
 
         element.on('nav(nav)', function (elem) {
             var url = elem.data("url");
@@ -130,15 +131,14 @@
             $.ajax({
                 type: "POST",
                 url: "/api/v1/users/reset-password",
-                success: function (data) {
-                    layer.alert('重置邮件已发送，请登录注册邮件进行操作。', {
-                        icon: 1,
-                    })
-                },
-                error: function (jqXHR, textStatus, error) {
-                    layer.msg(error);
+            }).done(function (data, text, jqXHR) {
+                if (!common.apiResponse(data, layer.alert, data.data, {icon: 5})) {
+                    return;
                 }
-            })
+                layer.alert('重置邮件已发送，请登录注册邮件进行操作。', {
+                    icon: 1,
+                })
+            });
         });
     });
 </script>
