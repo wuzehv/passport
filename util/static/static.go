@@ -23,13 +23,17 @@ const (
 	ClientNotExists
 	ClientDisabled
 	SystemError
-	// 内部状态码
-	UsernamePasswdNotMatch
+	Forbidden
+)
+
+// 内部状态码
+const (
+	UsernamePasswdNotMatch Code = iota + 1000
 	UsernamePasswdFailNumOut
 	UserNotLogin
 )
 
-var errors = [...]string{
+var errors = map[Code]string{
 	Success:                  "success",
 	ParamsError:              "params error",
 	SignatureError:           "signature error",
@@ -42,6 +46,7 @@ var errors = [...]string{
 	ClientNotExists:          "client not exists",
 	ClientDisabled:           "client disabled",
 	SystemError:              "system error",
+	Forbidden:                "forbidden",
 	UsernamePasswdNotMatch:   "用户名密码错误",
 	UsernamePasswdFailNumOut: "失败次数过多",
 	UserNotLogin:             "用户未登录",
@@ -100,9 +105,9 @@ func (c Code) Msg(data interface{}) (int, *Response) {
 }
 
 func (c Code) Error() string {
-	if int(c) >= len(errors) {
-		return errors[SystemError]
+	if v, ok := errors[c]; ok {
+		return v
 	}
 
-	return errors[c]
+	return errors[SystemError]
 }

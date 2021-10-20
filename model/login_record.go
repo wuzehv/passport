@@ -21,10 +21,10 @@ const LoginFailMaxNum = 5
 const LoginFailDuration = 5 * time.Minute
 
 const (
-	// 登录失败
-	TypeFail = iota + 1
 	// 登录成功
-	TypeSuccess
+	TypeSuccess = iota + 1
+	// 登录失败
+	TypeFail
 	// 其他(例如：登录错误次数过多导致的重试)
 	TypeOther
 )

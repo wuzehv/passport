@@ -8,6 +8,8 @@ layui.define(function (exports) {
         height: 'full-250',
         cellMinWidth: 80,
         autoSort: false,
+        successCode: 0,
+        statusEnable: 1,
         parseData: function (res) {
             return {
                 "code": res.code,
@@ -25,7 +27,6 @@ layui.define(function (exports) {
             field: 'id',
             type: 'desc'
         },
-        successCode: 0,
         render: function (name, id) {
             $('#breadcrumb-name').text(name);
             this.container.empty().html($(id).html());
@@ -45,7 +46,7 @@ layui.define(function (exports) {
         },
         template: {
             status: function(status) {
-                if (status === 1) {
+                if (status === this.statusEnable) {
                     return '启用'
                 } else {
                     return '禁用'
@@ -57,7 +58,7 @@ layui.define(function (exports) {
                 var c = 'layui-bg-red';
                 var text = '禁用';
 
-                if (data.status !== 1) {
+                if (data.status === this.statusEnable) {
                     c = 'layui-bg-green';
                     text = '启用';
                 }

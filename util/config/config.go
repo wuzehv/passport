@@ -61,6 +61,11 @@ type email struct {
 	PoolSize    int
 }
 
+type rate struct {
+	Limit  float64
+	Period int
+}
+
 var (
 	config *ini.File
 	App    = &app{}
@@ -69,6 +74,7 @@ var (
 	Log    = &log{}
 	Svc    = &svc{}
 	Email  = &email{}
+	Rate   = &rate{}
 )
 
 // ini文件加载优先级
@@ -91,6 +97,7 @@ func init() {
 	mapTo("log", Log)
 	mapTo("svc", Svc)
 	mapTo("email", Email)
+	mapTo("rate", Rate)
 }
 
 func getConfigFile() string {
