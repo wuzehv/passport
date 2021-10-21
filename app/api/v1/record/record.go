@@ -3,22 +3,41 @@ package record
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/wuzehv/passport/model"
-	"github.com/wuzehv/passport/service/db"
-	"net/http"
+	"github.com/wuzehv/passport/util/static"
+	"strings"
 )
 
 func Index(c *gin.Context) {
-	var userNum, clientNum, sessionNum, recodeNum int64
+	var t model.LoginRecord
 
-	db.Db.Model(&model.User{}).Count(&userNum)
-	db.Db.Model(&model.Client{}).Count(&clientNum)
-	db.Db.Model(&model.Session{}).Where("status = ?", model.StatusLogin).Count(&sessionNum)
-	db.Db.Model(&model.LoginRecord{}).Count(&recodeNum)
+	client := c.Query("client")
+	userEmail := c.Query("email")
 
-	c.HTML(http.StatusOK, "index", gin.H{
-		"user_num":    userNum,
-		"client_num":  clientNum,
-		"session_num": sessionNum,
-		"record_num":  recodeNum,
-	})
+	p := model.Param{
+		Table:      &t,
+		Bind:       make(map[string]interface{}),
+	}
+
+	var where strings.Builder
+	where.WriteString("1")
+
+	if strings.TrimSpace(client) != "" {
+		p.Bind["id"] = id
+		where.WriteString(" and id = @id")
+	}
+
+	if strings.TrimSpace(userEmail) != "" {
+		p.Bind["email"] = "%" + userEmail + "%"
+		where.WriteString(" and email like @email")
+	}
+
+	p.Where = where.String()
+
+	res, err := model.PaginateContext(c, &p)
+	if err != nil {
+		c.JSON(static.SystemError.Msg(err))
+		return
+	}
+
+	c.JSON(static.Success.Msg(res))
 }

@@ -46,7 +46,7 @@ layui.define(function (exports) {
         },
         template: {
             status: function(status) {
-                if (status === this.statusEnable) {
+                if (status === obj.statusEnable) {
                     return '启用'
                 } else {
                     return '禁用'
@@ -58,7 +58,7 @@ layui.define(function (exports) {
                 var c = 'layui-bg-red';
                 var text = '禁用';
 
-                if (data.status === this.statusEnable) {
+                if (data.status !== obj.statusEnable) {
                     c = 'layui-bg-green';
                     text = '启用';
                 }

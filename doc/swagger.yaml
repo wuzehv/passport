@@ -1,40 +1,24 @@
 basePath: /
 definitions:
-  model.Action:
-    properties:
-      id:
-        type: integer
-      remark:
-        type: string
-      url:
-        type: string
-    type: object
   model.Client:
     properties:
       callback:
+        type: string
+      created_at:
         type: string
       domain:
         type: string
       id:
         type: integer
-      secret:
-        type: string
-    type: object
-  model.Menu:
-    properties:
-      id:
-        type: integer
       name:
         type: string
-      parent_id:
-        type: integer
-      status:
-        type: integer
-      url:
+      secret:
         type: string
     type: object
   model.User:
     properties:
+      created_at:
+        type: string
       email:
         type: string
       gender:
@@ -48,6 +32,8 @@ definitions:
     type: object
   static.Response:
     properties:
+      code:
+        type: integer
       data:
         type: object
       message:
@@ -61,114 +47,6 @@ info:
   title: 单点登录系统
   version: "1.0"
 paths:
-  /api/v1/actions:
-    get:
-      description: 接口列表
-      parameters:
-      - description: 页码
-        in: query
-        name: page
-        type: integer
-      - description: 每页数量
-        in: query
-        name: page_size
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/static.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/model.Action'
-              type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/static.Response'
-      tags:
-      - 接口管理
-    post:
-      consumes:
-      - application/x-www-form-urlencoded
-      description: 添加接口
-      parameters:
-      - description: 备注
-        in: formData
-        name: remark
-        required: true
-        type: string
-      - description: uri
-        in: formData
-        name: url
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/static.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/static.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/static.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/static.Response'
-      tags:
-      - 接口管理
-  /api/v1/actions/{id}:
-    put:
-      consumes:
-      - application/x-www-form-urlencoded
-      description: 更新接口
-      parameters:
-      - description: ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 备注
-        in: formData
-        name: remark
-        required: true
-        type: string
-      - description: uri
-        in: formData
-        name: url
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/static.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/static.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/static.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/static.Response'
-      tags:
-      - 接口管理
   /api/v1/clients:
     get:
       description: 客户端列表
@@ -186,15 +64,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/static.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/model.Client'
-              type: object
-        "500":
-          description: Internal Server Error
           schema:
             $ref: '#/definitions/static.Response'
       tags:
@@ -214,6 +83,11 @@ paths:
         name: domain
         required: true
         type: string
+      - description: 域名
+        in: formData
+        name: name
+        required: true
+        type: string
       - description: 用来签名校验的密钥
         in: formData
         name: secret
@@ -224,18 +98,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/static.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/static.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/static.Response'
-        "500":
-          description: Internal Server Error
           schema:
             $ref: '#/definitions/static.Response'
       tags:
@@ -261,6 +123,11 @@ paths:
         name: domain
         required: true
         type: string
+      - description: 域名
+        in: formData
+        name: name
+        required: true
+        type: string
       - description: 用来签名校验的密钥
         in: formData
         name: secret
@@ -271,18 +138,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/static.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/static.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/static.Response'
-        "500":
-          description: Internal Server Error
           schema:
             $ref: '#/definitions/static.Response'
       tags:
@@ -305,207 +160,28 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/static.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/static.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/static.Response'
-        "500":
-          description: Internal Server Error
+      tags:
+      - 客户端管理
+  /api/v1/clients/check-callback:
+    head:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 检测客户端地址
+      parameters:
+      - description: 回调地址
+        in: path
+        name: url
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/static.Response'
       tags:
       - 客户端管理
-  /api/v1/menus:
-    get:
-      description: 菜单列表
-      parameters:
-      - description: 页码
-        in: query
-        name: page
-        type: integer
-      - description: 每页数量
-        in: query
-        name: page_size
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/static.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/model.Menu'
-              type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/static.Response'
-      tags:
-      - 菜单管理
-    post:
-      consumes:
-      - application/x-www-form-urlencoded
-      description: 添加菜单
-      parameters:
-      - description: 菜单名称
-        in: formData
-        name: name
-        required: true
-        type: string
-      - description: 父级ID
-        in: formData
-        name: parent_id
-        type: integer
-      - description: 菜单状态 [1]:启用中 [2]:未启用
-        in: formData
-        name: status
-        required: true
-        type: integer
-      - description: 菜单链接
-        in: formData
-        name: url
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/static.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/static.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/static.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/static.Response'
-      tags:
-      - 菜单管理
-  /api/v1/menus/{id}:
-    delete:
-      consumes:
-      - application/x-www-form-urlencoded
-      description: 菜单删除
-      parameters:
-      - description: ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/static.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/static.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/static.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/static.Response'
-      tags:
-      - 菜单管理
-    put:
-      consumes:
-      - application/x-www-form-urlencoded
-      description: 更新菜单
-      parameters:
-      - description: ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 菜单名称
-        in: formData
-        name: name
-        required: true
-        type: string
-      - description: 父级ID
-        in: formData
-        name: parent_id
-        type: integer
-      - description: 菜单状态 [1]:启用中 [2]:未启用
-        in: formData
-        name: status
-        required: true
-        type: integer
-      - description: 菜单链接
-        in: formData
-        name: url
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/static.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/static.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/static.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/static.Response'
-      tags:
-      - 菜单管理
-  /api/v1/menus/{id}/toggle-status:
-    post:
-      consumes:
-      - application/x-www-form-urlencoded
-      description: 菜单启用/禁用
-      parameters:
-      - description: ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/static.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/static.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/static.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/static.Response'
-      tags:
-      - 菜单管理
   /api/v1/users:
     get:
       description: 用户列表
@@ -524,15 +200,6 @@ paths:
         "200":
           description: OK
           schema:
-            allOf:
-            - $ref: '#/definitions/static.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/model.User'
-              type: object
-        "500":
-          description: Internal Server Error
-          schema:
             $ref: '#/definitions/static.Response'
       tags:
       - 用户管理
@@ -546,19 +213,9 @@ paths:
         name: email
         required: true
         type: string
-      - description: 性别
-        in: formData
-        name: gender
-        required: true
-        type: integer
       - description: 手机号
         in: formData
         name: mobile
-        required: true
-        type: string
-      - description: 密码
-        in: formData
-        name: password
         required: true
         type: string
       - description: 真实姓名
@@ -571,18 +228,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/static.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/static.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/static.Response'
-        "500":
-          description: Internal Server Error
           schema:
             $ref: '#/definitions/static.Response'
       tags:
@@ -603,19 +248,9 @@ paths:
         name: email
         required: true
         type: string
-      - description: 性别
-        in: formData
-        name: gender
-        required: true
-        type: integer
       - description: 手机号
         in: formData
         name: mobile
-        required: true
-        type: string
-      - description: 密码
-        in: formData
-        name: password
         required: true
         type: string
       - description: 真实姓名
@@ -628,18 +263,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/static.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/static.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/static.Response'
-        "500":
-          description: Internal Server Error
           schema:
             $ref: '#/definitions/static.Response'
       tags:
@@ -669,23 +292,17 @@ paths:
         name: password_verify
         required: true
         type: string
+      - in: formData
+        maxLength: 255
+        minLength: 1
+        name: token
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/static.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/static.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/static.Response'
-        "500":
-          description: Internal Server Error
           schema:
             $ref: '#/definitions/static.Response'
       tags:
@@ -708,16 +325,18 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/static.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/static.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/static.Response'
-        "500":
-          description: Internal Server Error
+      tags:
+      - 用户管理
+  /api/v1/users/reset-password:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 重置密码
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/static.Response'
       tags:

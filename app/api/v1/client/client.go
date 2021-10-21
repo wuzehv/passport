@@ -23,7 +23,7 @@ type Form struct {
 // @Produce application/json
 // @Param _ query validator.Pager false "_"
 // @Success 200 {object} static.Response{data=model.Client}
-// @Failure 500 {object} static.Response
+// @Failure 200 {object} static.Response
 // @Router /api/v1/clients [GET]
 func Index(c *gin.Context) {
 	var t model.Client
@@ -68,9 +68,7 @@ func Index(c *gin.Context) {
 // @Produce application/json
 // @Param _ formData Form false "_"
 // @Success 200 {object} static.Response
-// @Failure 400 {object} static.Response
-// @Failure 404 {object} static.Response
-// @Failure 500 {object} static.Response
+// @Failure 200 {object} static.Response
 // @Router /api/v1/clients [POST]
 func Add(c *gin.Context) {
 	var data Form
@@ -101,9 +99,7 @@ func Add(c *gin.Context) {
 // @Param id path int true "ID"
 // @Param _ formData Form false "_"
 // @Success 200 {object} static.Response
-// @Failure 400 {object} static.Response
-// @Failure 404 {object} static.Response
-// @Failure 500 {object} static.Response
+// @Failure 200 {object} static.Response
 // @Router /api/v1/clients/{id} [PUT]
 func Update(c *gin.Context) {
 	id := c.Param("id")
@@ -143,9 +139,7 @@ func Update(c *gin.Context) {
 // @Produce application/json
 // @Param id path int true "ID"
 // @Success 200 {object} static.Response
-// @Failure 400 {object} static.Response
-// @Failure 404 {object} static.Response
-// @Failure 500 {object} static.Response
+// @Failure 200 {object} static.Response
 // @Router /api/v1/clients/{id}/toggle-status [POST]
 func ToggleStatus(c *gin.Context) {
 	id := c.Param("id")
@@ -182,9 +176,7 @@ func ToggleStatus(c *gin.Context) {
 // @Produce application/json
 // @Param url path string true "回调地址"
 // @Success 200 {object} static.Response
-// @Failure 400 {object} static.Response
-// @Failure 404 {object} static.Response
-// @Failure 500 {object} static.Response
+// @Failure 200 {object} static.Response
 // @Router /api/v1/clients/check-callback [HEAD]
 func CheckCallback(c *gin.Context) {
 	url := c.Query("url")

@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/wuzehv/passport/app/api/v1/client"
 	"github.com/wuzehv/passport/app/api/v1/index"
+	"github.com/wuzehv/passport/app/api/v1/record"
 	"github.com/wuzehv/passport/app/api/v1/user"
 	"github.com/wuzehv/passport/app/sso"
 	"github.com/wuzehv/passport/app/svc"
@@ -54,6 +55,8 @@ func constructAdmin(router *gin.Engine) {
 		r.PUT("/clients/:id", client.Update)
 		r.POST("/clients/:id/toggle-status", client.ToggleStatus)
 		r.GET("/clients/check-callback", client.CheckCallback)
+
+		r.GET("/records", record.Index)
 
 		r.GET("/records", client.Index)
 	}

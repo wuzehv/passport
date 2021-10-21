@@ -19,32 +19,33 @@ func Api() gin.HandlerFunc {
 			c.SetCookie(static.CookieFlag, "false", -1, "/", "", !config.IsDev(), true)
 		}
 
+		var u model.User
+		defer func() {
+			if u.Id > 0 && u.Status == model.StatusNormal {
+				return
+			}
+
+			f()
+			c.Redirect(http.StatusTemporaryRedirect, "/")
+			c.Abort()
+		}()
+
 		token, err := c.Cookie(static.CookieFlag)
 		if err != nil {
-			f()
-			//c.AbortWithStatusJSON(http.StatusTemporaryRedirect, static.UserNotLogin.Msg(nil))
-			c.Redirect(http.StatusTemporaryRedirect, "/")
 			return
 		}
 
 		uid, err := strconv.Atoi(token[32:])
 		if err != nil {
-			f()
-			c.Redirect(http.StatusTemporaryRedirect, "/")
-			//c.AbortWithStatusJSON(http.StatusTemporaryRedirect, static.UserNotLogin.Msg(nil))
 			return
 		}
 
-		var u model.User
 		if err = db.Db.First(&u, uid).Error; err != nil {
-			c.AbortWithStatusJSON(static.SystemError.Msg(err))
 			return
 		}
 
 		// 判断登录是否过期
 		if u.Token != token || time.Now().After(u.ExpireTime) {
-			f()
-			c.AbortWithStatusJSON(static.UserNotLogin.Msg(nil))
 			return
 		}
 

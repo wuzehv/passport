@@ -22,9 +22,8 @@ import (
 type Form struct {
 	Email    string `form:"email" binding:"required,email"`                   // 用户邮箱
 	RealName string `form:"realname" binding:"required,gte=1,lte=255"`        // 真实姓名
-	Gender   int    `form:"gender" binding:"required,max=2,min=1"`            // 性别
 	Mobile   string `form:"mobile" binding:"required,gte=6,lte=255,alphanum"` // 手机号
-	Password string `form:"password" binding:"required,gte=6,lte=255"`        // 密码
+	//Password string `form:"password" binding:"required,gte=6,lte=255"`        // 密码
 }
 
 // @Description 用户列表
@@ -32,7 +31,7 @@ type Form struct {
 // @Produce application/json
 // @Param _ query validator.Pager false "_"
 // @Success 200 {object} static.Response{data=model.User}
-// @Failure 500 {object} static.Response
+// @Failure 200 {object} static.Response
 // @Router /api/v1/users [GET]
 func Index(c *gin.Context) {
 	var t model.User
@@ -77,9 +76,7 @@ func Index(c *gin.Context) {
 // @Produce application/json
 // @Param _ formData Form false "_"
 // @Success 200 {object} static.Response
-// @Failure 400 {object} static.Response
-// @Failure 404 {object} static.Response
-// @Failure 500 {object} static.Response
+// @Failure 200 {object} static.Response
 // @Router /api/v1/users [POST]
 func Add(c *gin.Context) {
 	var data Form
@@ -90,8 +87,7 @@ func Add(c *gin.Context) {
 
 	d := model.User{
 		Email:    data.Email,
-		Password: common.GenPassword(data.Password),
-		Gender:   data.Gender,
+		Password: common.GenPassword("123456"),
 		Mobile:   data.Mobile,
 		Realname: data.RealName,
 		Status:   model.StatusNormal,
@@ -111,9 +107,7 @@ func Add(c *gin.Context) {
 // @Param id path int true "ID"
 // @Param _ formData Form false "_"
 // @Success 200 {object} static.Response
-// @Failure 400 {object} static.Response
-// @Failure 404 {object} static.Response
-// @Failure 500 {object} static.Response
+// @Failure 200 {object} static.Response
 // @Router /api/v1/users/{id} [PUT]
 func Update(c *gin.Context) {
 	id := c.Param("id")
@@ -138,7 +132,6 @@ func Update(c *gin.Context) {
 	d.Email = data.Email
 	d.Realname = data.RealName
 	d.Mobile = data.Mobile
-	d.Gender = data.Gender
 
 	if err := db.Db.Save(&d).Error; err != nil {
 		c.JSON(static.SystemError.Msg(err))
@@ -154,9 +147,7 @@ func Update(c *gin.Context) {
 // @Produce application/json
 // @Param id path int true "ID"
 // @Success 200 {object} static.Response
-// @Failure 400 {object} static.Response
-// @Failure 404 {object} static.Response
-// @Failure 500 {object} static.Response
+// @Failure 200 {object} static.Response
 // @Router /api/v1/users/{id}/toggle-status [POST]
 func ToggleStatus(c *gin.Context) {
 	id := c.Param("id")
@@ -198,9 +189,7 @@ type ResetPasswordForm struct {
 // @Accept application/x-www-form-urlencoded
 // @Produce application/json
 // @Success 200 {object} static.Response
-// @Failure 400 {object} static.Response
-// @Failure 404 {object} static.Response
-// @Failure 500 {object} static.Response
+// @Failure 200 {object} static.Response
 // @Router /api/v1/users/reset-password [POST]
 func ResetPassword(c *gin.Context) {
 	u, _ := c.Get(static.User)
@@ -264,9 +253,7 @@ func ResetPasswordPage(c *gin.Context) {
 // @Param id path int true "ID"
 // @Param _ formData ResetPasswordForm false "_"
 // @Success 200 {object} static.Response
-// @Failure 400 {object} static.Response
-// @Failure 404 {object} static.Response
-// @Failure 500 {object} static.Response
+// @Failure 200 {object} static.Response
 // @Router /api/v1/users/{id}/reset-password [POST]
 func DoResetPassword(c *gin.Context) {
 	var data ResetPasswordForm
