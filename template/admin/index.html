@@ -40,7 +40,7 @@
             <li class="layui-nav-item layui-nav-itemed">
                 <a href="javascript:;">信息查看</a>
                 <dl class="layui-nav-child">
-                    <dd><a href="javascript:;" data-mod="record" data-url="/api/v1/users">登录日志</a></dd>
+                    <dd><a href="javascript:;" data-mod="record" data-url="/api/v1/records">登录日志</a></dd>
                 </dl>
             </li>
         </ul>
@@ -106,10 +106,11 @@
         base: '/static/library/laymod/'
     });
 
-    layui.use(['table', 'form', 'element', 'client', 'user', 'laytpl', 'common'], function () {
+    layui.use(['table', 'form', 'element', 'client', 'user', 'record', 'laytpl', 'common'], function () {
         var element = layui.element,
             client = layui.client,
             user = layui.user,
+            record = layui.record,
             $ = layui.$,
             common = layui.common;
 
@@ -124,7 +125,7 @@
                     user.init(elem.text(), url);
                     break;
                 case "record":
-                    user.init(elem.text(), url);
+                    record.init(elem.text(), url);
                     break;
                 default:
             }
@@ -148,6 +149,7 @@
 
 {[{ template "client" }]}
 {[{ template "user" }]}
+{[{ template "record" }]}
 
 </body>
 </html>

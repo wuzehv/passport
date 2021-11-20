@@ -97,6 +97,7 @@ layui.define('common', function (exports) {
                     });
                 } else if (layEvent === 'edit') { //编辑
                     $('.search .create-btn').click();
+                    $('input[name="email"]').disable();
                     $.ajax({
                         type: "GET",
                         url: "/api/v1/users/?id=" + data.id,

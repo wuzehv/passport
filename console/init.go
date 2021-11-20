@@ -84,8 +84,8 @@ func main() {
 	}
 	log.Println("create records table done")
 
-	db.Create(&model.Client{Domain: "client.one.com:8081", Callback: "http://client.one.com:8081/callback", Secret: "123456", Status: model.StatusNormal})
-	db.Create(&model.Client{Domain: "client.two.com:8082", Callback: "http://client.two.com:8082/callback", Secret: "123456", Status: model.StatusNormal})
+	db.Create(&model.Client{Domain: "client.one.com:8081", Name: "t1", Callback: "http://client.one.com:8081/callback", Secret: "123456", Status: model.StatusNormal})
+	db.Create(&model.Client{Domain: "client.two.com:8082", Name: "t2", Callback: "http://client.two.com:8082/callback", Secret: "123456", Status: model.StatusNormal})
 
 	log.Println("initialize client done")
 

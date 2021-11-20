@@ -5,14 +5,15 @@ layui.define('common', function (exports) {
 
     var obj = {
         init: function (name, url) {
+            alert(111);
             common.render(name, '#recordContainer');
 
-            var id = $('#userId');
+            var client = $('#clientName');
             var email = $('#userEmail');
 
             var active = {
                 reload: function () {
-                    userTable.reload({
+                    recordTable.reload({
                         initSort: common.initSort,
                         where: {
                             id: id.val(),
@@ -25,7 +26,7 @@ layui.define('common', function (exports) {
             common.init(active);
 
             // 表格渲染
-            var userTable = table.render({
+            var recordTable = table.render({
                 elem: '#recordTable',
                 url: url,
                 autoSort: common.autoSort,
@@ -40,9 +41,11 @@ layui.define('common', function (exports) {
                     {field: 'id', title: 'ID', sort: true, fixed: 'left'},
                     {field: 'email', title: '邮箱', minWidth: 200},
                     {field: 'realname', title: '真实姓名'},
-                    {field: 'mobile', title: '手机号'},
+                    {field: 'client_name', title: '客户端名称'},
+                    {field: 'ip_addr', title: 'IP'},
+                    {field: 'user_agent', title: 'User Agent'},
                     {
-                        field: 'status', title: '状态', templet: function (d) {
+                        field: 'type', title: '类型', templet: function (d) {
                             return common.template.status(d.status);
                         }
                     },
@@ -51,21 +54,12 @@ layui.define('common', function (exports) {
                             return common.template.formatDateTime(d.created_at);
                         }
                     },
-                    {
-                        field: '', title: '操作', minWidth: 200, templet: function (d) {
-                            var btn = "<div id=\"userTableTool\">"
-                            btn += common.template.tableTool(d);
-                            btn += "</div>";
-
-                            return btn;
-                        }
-                    },
                 ]]
             });
 
             // 排序
-            table.on('sort(userTable)', function (obj) {
-                userTable.reload({
+            table.on('sort(recordTable)', function (obj) {
+                recordTable.reload({
                     initSort: obj,
                     where: {
                         id: id.val(),
@@ -78,5 +72,5 @@ layui.define('common', function (exports) {
         }
     };
 
-    exports('user', obj);
+    exports('record', obj);
 })

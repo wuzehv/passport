@@ -57,8 +57,6 @@ func constructAdmin(router *gin.Engine) {
 		r.GET("/clients/check-callback", client.CheckCallback)
 
 		r.GET("/records", record.Index)
-
-		r.GET("/records", client.Index)
 	}
 }
 

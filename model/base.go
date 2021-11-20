@@ -29,10 +29,6 @@ const (
 	GenderFemale = 2
 )
 
-type Base interface {
-	Base()
-}
-
 type Param struct {
 	Page       int
 	PageSize   int
@@ -41,6 +37,7 @@ type Param struct {
 	Bind       map[string]interface{}
 	OrderField string
 	OrderType  string
+	JoinObj    *gorm.DB
 }
 
 type PaginateResponse struct {
@@ -50,44 +47,65 @@ type PaginateResponse struct {
 	Items    []map[string]interface{} `json:"items"`
 }
 
-func Paginate(params *Param) (*PaginateResponse, error) {
-	if params.Page <= 0 {
-		params.Page = 1
+func PaginateContext(c *gin.Context, param *Param) (*PaginateResponse, error) {
+	page, _ := strconv.Atoi(c.Query("page"))
+	pageSize, _ := strconv.Atoi(c.Query("page_size"))
+	param.Page = page
+	param.PageSize = pageSize
+	return Paginate(param)
+}
+
+func PaginateScopes(page, pageSize int) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		offset := (page - 1) * pageSize
+		return db.Offset(offset).Limit(pageSize)
+	}
+}
+
+func Paginate(param *Param) (*PaginateResponse, error) {
+	if param.Page <= 0 {
+		param.Page = 1
 	}
 
 	switch {
-	case params.PageSize > MaxPageSize:
-		params.PageSize = MaxPageSize
-	case params.PageSize <= 0:
-		params.PageSize = DefaultPageSize
+	case param.PageSize > MaxPageSize:
+		param.PageSize = MaxPageSize
+	case param.PageSize <= 0:
+		param.PageSize = DefaultPageSize
 	}
 
 	res := PaginateResponse{
-		Page:     params.Page,
-		PageSize: params.PageSize,
+		Page:     param.Page,
+		PageSize: param.PageSize,
 		Items:    []map[string]interface{}{},
 	}
 
-	if params.OrderField == "" {
-		params.OrderField = "id"
+	if param.OrderField == "" {
+		param.OrderField = "id"
 	}
 
-	if params.OrderType == "" {
-		params.OrderType = "desc"
+	if param.OrderType == "" {
+		param.OrderType = "desc"
 	}
 
-	order := params.OrderField + " " + params.OrderType
+	order := param.OrderField + " " + param.OrderType
 
-	dc := db.Db.Model(params.Table)
-	// 注意这里不能用dc进行调用
-	dl := db.Db.Model(params.Table).Order(order).Scopes(PaginateScopes(params.Page, params.PageSize))
+	var dc, dl *gorm.DB
+	if param.JoinObj == nil {
+		dc = db.Db.Model(param.Table)
+		// 注意这里不能用dc进行调用
+		dl = db.Db.Model(param.Table).Order(order).Scopes(PaginateScopes(param.Page, param.PageSize))
+	} else {
+		dc = param.JoinObj
+		dl = param.JoinObj.Order(order).Scopes(PaginateScopes(param.Page, param.PageSize))
+	}
 
-	if params.Where != "" && len(params.Bind) > 0 {
-		if err := dc.Where(params.Where, params.Bind).Count(&res.Total).Error; err != nil {
+	if param.Where != "" && len(param.Bind) > 0 {
+		if err := dc.Where(param.Where, param.Bind).Count(&res.Total).Error; err != nil {
 			return nil, err
 		}
 
-		if err := dl.Where(params.Where, params.Bind).Find(&res.Items).Error; err != nil {
+		if err := dl.Where(param.Where, param.Bind).Find(&res.Items).Error; err != nil {
 			return nil, err
 		}
 	} else {
@@ -101,19 +119,4 @@ func Paginate(params *Param) (*PaginateResponse, error) {
 	}
 
 	return &res, nil
-}
-
-func PaginateContext(c *gin.Context, params *Param) (*PaginateResponse, error) {
-	page, _ := strconv.Atoi(c.Query("page"))
-	pageSize, _ := strconv.Atoi(c.Query("page_size"))
-	params.Page = page
-	params.PageSize = pageSize
-	return Paginate(params)
-}
-
-func PaginateScopes(page, pageSize int) func(db *gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		offset := (page - 1) * pageSize
-		return db.Offset(offset).Limit(pageSize)
-	}
 }
