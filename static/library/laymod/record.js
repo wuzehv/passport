@@ -55,7 +55,7 @@ layui.define('common', function (exports) {
                         }
                     },
                     {
-                        field: 'created_at', title: '创建时间', minWidth: 200, sort: true, templet: function (d) {
+                        field: 'created_at', title: '创建时间', minWidth: 200, templet: function (d) {
                             return common.template.formatDateTime(d.created_at);
                         }
                     },
