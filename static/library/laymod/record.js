@@ -5,19 +5,18 @@ layui.define('common', function (exports) {
 
     var obj = {
         init: function (name, url) {
-            alert(111);
             common.render(name, '#recordContainer');
 
-            var client = $('#clientName');
             var email = $('#userEmail');
+            var client = $('#clientName');
 
             var active = {
                 reload: function () {
                     recordTable.reload({
                         initSort: common.initSort,
                         where: {
-                            id: id.val(),
-                            email: email.val()
+                            email: email.val(),
+                            client: client.val()
                         }
                     });
                 }
@@ -45,8 +44,14 @@ layui.define('common', function (exports) {
                     {field: 'ip_addr', title: 'IP'},
                     {field: 'user_agent', title: 'User Agent'},
                     {
-                        field: 'type', title: '类型', templet: function (d) {
-                            return common.template.status(d.status);
+                        field: 'type', title: '日志类型', templet: function (d) {
+                            if (d.type === 1) {
+                                return '成功';
+                            } else if (d.type === 2) {
+                                return '失败';
+                            } else {
+                                return '其他';
+                            }
                         }
                     },
                     {
@@ -62,8 +67,8 @@ layui.define('common', function (exports) {
                 recordTable.reload({
                     initSort: obj,
                     where: {
-                        id: id.val(),
                         email: email.val(),
+                        client: client.val(),
                         order_field: obj.field,
                         order_type: obj.type
                     }

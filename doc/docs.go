@@ -230,6 +230,39 @@ var doc = `{
                 }
             }
         },
+        "/api/v1/records": {
+            "get": {
+                "description": "登录日志",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "信息查看"
+                ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "每页数量",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/static.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/users": {
             "get": {
                 "description": "用户列表",
@@ -703,6 +736,32 @@ var doc = `{
                     "type": "string"
                 },
                 "realname": {
+                    "type": "string"
+                }
+            }
+        },
+        "record.Result": {
+            "type": "object",
+            "properties": {
+                "clientName": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ipAddr": {
+                    "type": "string"
+                },
+                "realname": {
+                    "type": "string"
+                },
+                "userAgent": {
                     "type": "string"
                 }
             }

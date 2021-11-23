@@ -30,6 +30,23 @@ definitions:
       realname:
         type: string
     type: object
+  record.Result:
+    properties:
+      clientName:
+        type: string
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      ipAddr:
+        type: string
+      realname:
+        type: string
+      userAgent:
+        type: string
+    type: object
   static.Response:
     properties:
       code:
@@ -182,6 +199,27 @@ paths:
             $ref: '#/definitions/static.Response'
       tags:
       - 客户端管理
+  /api/v1/records:
+    get:
+      description: 登录日志
+      parameters:
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/static.Response'
+      tags:
+      - 信息查看
   /api/v1/users:
     get:
       description: 用户列表
